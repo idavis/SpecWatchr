@@ -94,10 +94,6 @@ class TestRunner
 
     dlls
   end
-
-  def usage
-    "no usage defined"
-  end
 end
 
 class NUnitRunner < TestRunner
@@ -108,50 +104,6 @@ class NUnitRunner < TestRunner
     @failed_tests = Array.new
     @status_by_dll = Hash.new
     @@nunit_path = "C:\\program files (x86)\\nunit 2.5.9\\bin\\net-2.0\\nunit-console-x86.exe"
-  end
-
-  def usage
-    <<-OUTPUT
-NUnitRunner runner will use the following exe to run your tests: 
-#{NUnitRunner.nunit_path}
-
-NUnitRunner for SpecWatchr uses category attributes for running unit tests.  Let's say you have a class called Person (located in file Person.cs).  You'll need to create a test class called PersonSpec.cs (all tests associated with Person.cs should go under PersonSpec.cs).  Once the test class is created all tests defined should be decorated with the Category attribute.  For example:
-
-//here is the person class (located in Person.cs)
-public class Person 
-{
-    public string FirstName { get; set; }
-}
-
-//here is the test class (located in PersonSpec.cs)...notice the category attribute
-namespace YourUnitTests
-{
-    [TestFixture]
-    [Category("Person")]
-    public void when_initializing_person
-    {
-        [Test]
-        public void should_set_first_name_to_empty_string()
-        {
-            Person person = new Person();
-            Assert.AreEqual(string.Empty, person.FirstName);
-        }
-    }
-
-    [TestFixture]
-    [Category("Person")]
-    public void some_other_test_associated_with_person
-    {
-        [Test]
-        public void should_run_test_if_Person_class_changes()
-        {
-            Assert.Fail();
-        }
-    }
-}
-
-Whenever you save Person.cs, all tests with the category "Person" will get executed.
-OUTPUT
   end
 
   def self.nunit_path
@@ -306,47 +258,6 @@ class MSTestRunner < TestRunner
     @@ms_test_path = value
   end
   
-  def usage
-    <<-OUTPUT
-MSTestRunner will use the following exe to run your tests: 
-#{MSTestRunner.ms_test_path}
-
-MSTestRunner for SpecWatchr uses a convension based approach for running unit tests.  Let's say you have a class called Person (located in file Person.cs).  You'll need to create a test class called PersonSpec.cs (all tests associated with Person.cs should go under PersonSpec.cs).  Once the test class is created, change the namespace of the class to include PersonSpec.  For example:
-
-//here is the person class (located in Person.cs)
-public class Person 
-{
-    public string FirstName { get; set; }
-}
-
-//here is the test class (located in PersonSpec.cs)...notice the namespace
-namespace YourUnitTests.PersonSpec
-{
-    [TestClass]
-    public void when_initializing_person
-    {
-        [TestMethod]
-        public void should_set_first_name_to_empty_string()
-        {
-            Person person = new Person();
-            Assert.AreEqual(string.Empty, person.FirstName);
-        }
-    }
-
-    [TestClass]
-    public void some_other_test_associated_with_person
-    {
-        [TestMethod]
-        public void should_run_test_if_Person_class_changes()
-        {
-            Assert.Fail();
-        }
-    }
-}
-
-Whenever you save Person.cs, all tests under the namespace PersonSpec will get executed.
-OUTPUT
-  end
 
   def failed_tests
     @failed_tests

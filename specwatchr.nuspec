@@ -2,7 +2,7 @@
 <package> 
   <metadata> 
     <id>specwatchr</id> 
-    <version>1.0.0</version> 
+    <version>1.0.29</version> 
     <authors>Amir Rajan, Matt Florence</authors>
     <description>Set of ruby scripts that help you do continuous testing in .Net (supports MSTest and NUnit).</description> 
     <language>en-US</language>
@@ -11,7 +11,9 @@
     <tags>test testing autotest bdd</tags>
   </metadata>
   <files>
-    <file src="watcher_dot_net.rb" />
-    <file src="dotnet.watchr.rb" />
+    <file src="init.ps1" target="tools/init.ps1" />
+    <file src="watcher_dot_net.rb" target="tools/watcher_dot_net.rb" />
+    <file src="dotnet.watchr.rb" target="tools/dotnet.watchr.rb" />
+    <file src="README.md" target="tools/README.md" />
   </files>
 </package>
