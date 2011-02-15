@@ -20,7 +20,7 @@ def handle filename
 end
 
 def reload
-  puts "Reloading SpecWatchr because a project file changed."
+  puts "Reloading SpecWatchr because a project/sln file changed."
   `touch dotnet.watchr.rb`
 end
 
@@ -55,3 +55,4 @@ tutorial
 
 watch ('.*.cs$') { |md| handle md[0] }
 watch ('.*.csproj$') { |md| reload }
+watch ('.*.sln$') { |md| reload }
