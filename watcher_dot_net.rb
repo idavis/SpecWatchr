@@ -567,7 +567,10 @@ class WatcherDotNet
 
     puts test_output
     
-    @notifier.execute "no spec found", "create spec #{spec}" if @test_runner.inconclusive
+    if @test_runner.inconclusive
+      @notifier.execute "no spec found", "create spec #{spec}"
+      puts @test_runner.usage
+    end
 
     @notifier.execute "tests failed", @test_runner.test_results if @test_runner.failed
     

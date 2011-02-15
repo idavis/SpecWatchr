@@ -52,6 +52,7 @@ describe WatcherDotNet do
       MSTestRunner.stub!(:new).and_return(@test_runner)
       @test_runner.stub!(:inconclusive).and_return(false)
       @test_runner.stub!(:failed).and_return(false)
+      @test_runner.stub!(:usage).and_return("usage")
 
       @command_shell = mock("command_shell")
       CommandShell.stub!(:new).and_return(@command_shell)
@@ -130,8 +131,12 @@ describe WatcherDotNet do
               end
             end
 
-            it "should notify user that tests wer inconclusive" do
+            it "should notify user that tests were inconclusive" do
               @notifier.should_receive(:execute).with("no spec found", "create spec PersonSpec")
+            end
+
+            it "should put usage of test runner" do
+              $stdout.should_receive(:puts).with("usage")
             end
           end
 
