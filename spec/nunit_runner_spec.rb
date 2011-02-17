@@ -439,15 +439,12 @@ describe NUnitRunner do
           @test_runner.test_results.should == expected_output
         end
 
-        it "should display mixed status output" do
+        it "should not display inconclusive if tests were found in at least one test suite" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
             when failing other test
                 it should fail other test
                     Error on line 1
-
-            Test Inconclusive:
-            No tests found under SomeTestSpec
 
           output
 

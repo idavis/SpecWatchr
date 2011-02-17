@@ -81,9 +81,16 @@ end
 class TestRunner
   def initialize folder
     @folder = folder
+    @test_dlls_override = nil
+  end
+  
+  def test_dlls= override
+    @test_dlls_override = override 
   end
 
   def test_dlls
+    return @test_dlls_override if(@test_dlls_override)
+
     dlls = Array.new
 
     Find.find(@folder) do |f| 
@@ -229,7 +236,7 @@ OUTPUT
       @failed = @failed || value[:failed]
     end
     
-    tests_to_display = Array.new
+    tests_to_display = Hash.new
 
     test_dlls.each do |test_dll|
       failed = dll_test_results[test_dll][:failed]
@@ -242,7 +249,12 @@ OUTPUT
         test_output = "All Passed:\n"
         tests_to_display = @tests.select { |k, v| v[:dll] == test_dll && v[:failed] == false }
       else
-        test_output = "Test Inconclusive:\nNo tests found under #{ test_name }\n\n"
+        if(@inconclusive)
+          test_output = "Test Inconclusive:\nNo tests found under #{ test_name }\n\n"
+        else
+          test_output = ""
+        end
+
         tests_to_display = Hash.new
       end  
       

@@ -1,5 +1,7 @@
 param($rootPath, $toolsPath, $package, $project)
 
+$usageFile = $toolsPath + "\Usage.txt"
+
 $configFileFrom = $toolsPath + "\dotnet.watchr.rb"
 $configFileTo = "dotnet.watchr.rb"
 
@@ -8,3 +10,4 @@ $watchrFileTo = "watcher_dot_net.rb"
 
 Copy-Item $configFileFrom $configFileTo
 Copy-Item $watchrFileFrom $watchrFileTo
+Start-Process $usageFile

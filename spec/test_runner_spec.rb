@@ -11,6 +11,13 @@ describe TestRunner do
       @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjTests.dll"
     end
 
+    it "should allow for the redefinition of test_dlls" do
+      @test_runner.test_dlls = ["first.dll", "second.dll"]
+
+      @test_runner.test_dlls[0].should == "first.dll"
+      @test_runner.test_dlls[1].should == "second.dll"
+    end
+
     [ { :path => "./SomeProjTest/bin/obj/SomeProjTest.dll", :desc => "test file in bin obj" },
       { :path => "./TestResults/output/2005-12-31/SomeProjTest.dll", :desc => "test file in automated MSTests" }
     ].each do |kvp|
