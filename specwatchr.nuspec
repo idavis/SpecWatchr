@@ -2,7 +2,7 @@
 <package> 
   <metadata> 
     <id>specwatchr</id> 
-    <version>1.0.35</version> 
+    <version>1.0.36</version> 
     <authors>Amir Rajan, Matt Florence</authors>
     <description>Set of ruby scripts that help you do continuous testing in .Net (supports MSTest and NUnit).</description> 
     <language>en-US</language>
