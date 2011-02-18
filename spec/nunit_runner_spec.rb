@@ -1,7 +1,10 @@
 require "./watcher_dot_net.rb"
 
 describe NUnitRunner do
-  before(:each) { @test_runner = NUnitRunner.new "." }
+  before(:each) do
+    @test_runner = NUnitRunner.new "." 
+    $stdout.stub!(:puts) { }
+  end
   context "initializing NUnitRunner" do
     it "should default ms test runner exe to be the 64bit installation location" do
       NUnitRunner.nunit_path.should == "C:\\program files (x86)\\nunit 2.5.9\\bin\\net-2.0\\nunit-console-x86.exe"

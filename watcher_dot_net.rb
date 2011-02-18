@@ -56,10 +56,19 @@ class RakeBuilder
     @sh = CommandShell.new
     @failed = false
     @folder = folder
+    @@rake_command = "rake"
+  end
+
+  def self.rake_command
+    @@rake_command
+  end
+
+  def self.rake_command= command
+    @@rake_command = command
   end
 
   def execute
-    output = @sh.execute "rake"
+    output = @sh.execute @@rake_command 
     @failed = output.match(/rake aborted/)
     filtered_output = ""
 
@@ -106,6 +115,46 @@ class TestRunner
     "no usage defined"
   end
 end
+
+class LambSpecRunner < TestRunner
+  def initialize folder
+    super folder
+    @sh = CommandShell.new
+  end
+
+  def self.lamb_spec_path
+    @@lamb_spec_path
+  end
+
+  def self.lamb_spec_path= value
+    @@lamb_spec_path = value
+  end
+
+  def execute test_name
+    @test_results = ""
+
+    test_dlls.each do |dll| 
+      @test_results += @sh.execute(test_cmd(dll, test_name))
+    end
+  end
+
+  def test_results
+    @test_results
+  end
+
+  def test_cmd dll, name
+    return "\"#{LambSpecRunner.lamb_spec_path}\" \"#{dll}\"" 
+  end
+
+  def failed
+    true
+  end
+
+  def inconclusive
+    false
+  end
+end
+
 
 class NUnitRunner < TestRunner
   def initialize folder

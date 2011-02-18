@@ -13,4 +13,19 @@ describe RakeBuilder do
       @watcher.builder.should == @builder
     end
   end
+
+  describe "when executing build" do
+    before(:each) do
+      $stdout.stub!(:puts) { }
+    end
+
+    specify "the default rake comand should be rake" do
+      RakeBuilder.rake_command.should == "rake"
+    end
+
+    it "should allow rake command to be overriden" do
+      RakeBuilder.rake_command = "rake other"
+      RakeBuilder.rake_command.should == "rake other"
+    end
+  end
 end
