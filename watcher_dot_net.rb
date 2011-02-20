@@ -589,6 +589,18 @@ class WatcherDotNet
     @test_runner
   end
 	
+  def notifier
+    @notifier
+  end
+
+  def sh
+    @sh
+  end
+
+  def spec_finder
+    @spec_finder
+  end
+
   def require_build file
     false == EXCLUDES.any? { |pattern| file.match(pattern) }
   end

@@ -8,6 +8,9 @@ $configFileTo = "dotnet.watchr.rb"
 $watchrFileFrom = $toolsPath + "\watcher_dot_net.rb"
 $watchrFileTo = "watcher_dot_net.rb"
 
-Copy-Item $configFileFrom $configFileTo
-Copy-Item $watchrFileFrom $watchrFileTo
-Start-Process $usageFile
+if(!(Test-Path $configFileTo))
+{
+  Copy-Item $configFileFrom $configFileTo
+  Copy-Item $watchrFileFrom $watchrFileTo
+  Start-Process $usageFile
+}

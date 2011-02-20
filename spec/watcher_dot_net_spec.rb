@@ -24,7 +24,8 @@ describe WatcherDotNet do
 
       [
         { :test_runner => :MSTestRunner },
-        { :test_runner => :NUnitRunner }
+        { :test_runner => :NUnitRunner },
+        { :test_runner => :LambSpecRunner }
       ].each do |kvp|
         it "should find #{kvp[:test_runner].to_s}" do
           @watcher = 
@@ -32,6 +33,53 @@ describe WatcherDotNet do
 
           @watcher.test_runner.class.to_s.should == kvp[:test_runner].to_s
         end
+      end
+    end
+
+    context "public accessors" do
+      before(:each) do
+        @builder = mock("builder")
+        MSBuilder.stub!(:new).and_return(@builder)
+        @builder.stub!(:failed).and_return(true)
+
+        @notifier = mock("notifier")
+        GrowlNotifier.stub!(:new).and_return(@notifier)
+        @notifier.stub!(:execute)
+
+        @test_runner = mock("test_runner")
+        MSTestRunner.stub!(:new).and_return(@test_runner)
+        @test_runner.stub!(:inconclusive).and_return(false)
+        @test_runner.stub!(:failed).and_return(false)
+        @test_runner.stub!(:usage).and_return("usage")
+
+        @command_shell = mock("command_shell")
+        CommandShell.stub!(:new).and_return(@command_shell)
+
+        @spec_finder = mock("spec_finder")
+        SpecFinder.stub!(:new).and_return(@spec_finder)
+        @spec_finder.stub!(:find)
+
+        @watcher = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
+      end
+
+      it "should expose test runner" do
+        @watcher.test_runner.should == @test_runner
+      end
+
+      it "should expose notifier" do
+        @watcher.notifier.should == @notifier
+      end
+
+      it "should expose builder" do
+        @watcher.builder.should == @builder
+      end
+
+      it "should expose sh" do
+        @watcher.sh.should == @command_shell
+      end
+
+      it "should expose spec finder" do
+        @watcher.spec_finder.should == @spec_finder
       end
     end
   end
