@@ -139,7 +139,7 @@ describe WatcherDotNet do
         before(:each) { given_build_fails }
 
         it "should notify the user" do
-          @notifier.should_receive(:execute).with("build failed", "build output")
+          @notifier.should_receive(:execute).with("build failed", "build output","red")
         end
       end
 
@@ -151,7 +151,10 @@ describe WatcherDotNet do
         end
         
         context "if spec found" do
-          before(:each) { @spec_finder.stub!(:find).with("Person.cs").and_return("PersonSpec") }
+          before(:each) { 
+            @spec_finder.stub!(:find).with("Person.cs").and_return("PersonSpec") 
+            @test_runner.stub!(:test_results).and_return("all green")
+          }
 
           it "should run tests" do
             @test_runner.should_receive(:execute).with("PersonSpec")
@@ -166,7 +169,7 @@ describe WatcherDotNet do
             end
 
             it "should notify user that all tests passed" do
-              @notifier.should_receive(:execute).with("all green", "all tests passed")
+              @notifier.should_receive(:execute).with("all green", "","green")
             end
           end
 
@@ -180,7 +183,7 @@ describe WatcherDotNet do
             end
 
             it "should notify user that tests were inconclusive" do
-              @notifier.should_receive(:execute).with("no spec found", "create spec PersonSpec")
+              @notifier.should_receive(:execute).with("no spec found", "create spec PersonSpec","red")
             end
 
             it "should put usage of test runner" do
@@ -198,7 +201,7 @@ describe WatcherDotNet do
             end
 
             it "should notify user that tests failed" do
-              @notifier.should_receive(:execute).with("tests failed", "3 tests failed")
+              @notifier.should_receive(:execute).with("tests failed", "3 tests failed","red")
             end
           end
         end

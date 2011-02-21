@@ -9,7 +9,7 @@ describe LambSpecRunner do
 
   it "should should resolve test command" do
     LambSpecRunner.lamb_spec_path = "lambspec.exe"
-    @test_runner.test_cmd("test1.dll", "SomeTestSpec").should == "\"lambspec.exe\" \"test1.dll\""
+    @test_runner.test_cmd("test1.dll", "SomeTestSpec").should == '"lambspec.exe" "test1.dll" SomeTestSpec'
   end
 
   describe "when executing tests" do

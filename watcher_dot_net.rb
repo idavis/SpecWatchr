@@ -7,12 +7,22 @@ class GrowlNotifier
     @@growl_path = value
   end
 
-  def execute title, text
+  def execute title, text, color
     return unless GrowlNotifier.growl_path
 
     text.gsub!('"', "'")
 
-    `\"#{GrowlNotifier.growl_path}\" "#{text}" /t:"#{title}"`
+    opts = ["\"#{GrowlNotifier.growl_path}\"", "\"#{text}\"", "/t:\"#{title}\""]
+
+    opts << "/i:\"#{File.expand_path("#{color}.png")}\"" 
+
+    `#{opts.join ' '}`
+  end
+  def red
+    
+  end
+  def green
+    File.expand_path('green.png')
   end
 end
 
@@ -143,11 +153,11 @@ class LambSpecRunner < TestRunner
   end
 
   def test_cmd dll, name
-    return "\"#{LambSpecRunner.lamb_spec_path}\" \"#{dll}\"" 
+    "\"#{LambSpecRunner.lamb_spec_path}\" \"#{dll}\" #{name}" 
   end
 
   def failed
-    true
+    !@test_results.include? " 0 Failures"
   end
 
   def inconclusive
@@ -568,6 +578,7 @@ class SpecFinder
 end
 
 class WatcherDotNet
+  attr_accessor :spec_finder, :notifier, :test_runner, :builder, :sh
   require 'find'
 
   EXCLUDES = [/\.dll$/, /debug/i, /TestResult.xml/, /testresults/i, /\.rb$/, /\.suo$/]
@@ -581,30 +592,9 @@ class WatcherDotNet
     @spec_finder = SpecFinder.new
   end
 
-  def builder
-    @builder
-  end
-
-  def test_runner
-    @test_runner
-  end
-	
-  def notifier
-    @notifier
-  end
-
-  def sh
-    @sh
-  end
-
-  def spec_finder
-    @spec_finder
-  end
-
   def require_build file
     false == EXCLUDES.any? { |pattern| file.match(pattern) }
   end
-
     
   def consider file
     puts "====================== changed: #{file} ===================="
@@ -618,7 +608,7 @@ class WatcherDotNet
     build_output = @builder.execute
     puts build_output
     
-    @notifier.execute "build failed", build_output if @builder.failed
+    @notifier.execute "build failed", build_output, 'red' if @builder.failed
 
     if @builder.failed
       puts "===================== done consider ========================"
@@ -641,13 +631,13 @@ class WatcherDotNet
     puts test_output
     
     if @test_runner.inconclusive
-      @notifier.execute "no spec found", "create spec #{spec}"
+      @notifier.execute "no spec found", "create spec #{spec}", 'red'
       puts @test_runner.usage
     end
 
-    @notifier.execute "tests failed", @test_runner.test_results if @test_runner.failed
+    @notifier.execute "tests failed", @test_runner.test_results, 'red' if @test_runner.failed
     
-    @notifier.execute "all green", "all tests passed" if !@test_runner.failed and !@test_runner.inconclusive
+    @notifier.execute @test_runner.test_results.split("\n").last, '', 'green' if !@test_runner.failed and !@test_runner.inconclusive
 
     puts "===================== done consider ========================"
 
