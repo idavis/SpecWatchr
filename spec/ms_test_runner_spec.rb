@@ -209,7 +209,8 @@ describe MSTestRunner do
                   it should pass first test
 
                   it should pass second test
-
+              
+              2 tests ran and passed
             output
 
             console_output = <<-console.gsub(/^ {14}/, '')
@@ -235,7 +236,8 @@ describe MSTestRunner do
                   it should pass second test
 
                   it should pass first test
-
+              
+              3 tests ran and passed
             output
 
             console_output = <<-console.gsub(/^ {14}/, '')
@@ -256,63 +258,83 @@ describe MSTestRunner do
         before { @test_runner.stub!(:test_dlls).and_return(["./test1.dll", "./test2.dll"]) }
 
         it "should aggregate output of both failing test executions" do
-            expected_output = <<-output.gsub(/^ {14}/, '')
-              Failed Tests:
-              when failing other test
-                  it should fail other test
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            Failed Tests:
+            when failing other test
+                it should fail other test
 
-              Failed Tests:
-              when failing test
-                  it should fail first test
+            Failed Tests:
+            when failing test
+                it should fail first test
 
-                  it should fail second test
+                it should fail second test
 
-            output
+          output
 
-            console_output_dll1 = <<-console.gsub(/^ {14}/, '')
-              Failed    autotestnet.when_failing_other_test.it_should_fail_other_test
-            console
+          console_output_dll1 = <<-console.gsub(/^ {12}/, '')
+            Failed    autotestnet.when_failing_other_test.it_should_fail_other_test
+          console
 
-            console_output_dll2 = <<-console.gsub(/^ {14}/, '')
-              Failed    autotestnet.when_failing_test.it_should_fail_first_test
-              Failed    autotestnet.when_failing_test.it_should_fail_second_test
-            console
+          console_output_dll2 = <<-console.gsub(/^ {12}/, '')
+            Failed    autotestnet.when_failing_test.it_should_fail_first_test
+            Failed    autotestnet.when_failing_test.it_should_fail_second_test
+          console
 
-            given_output "./test1.dll", console_output_dll1
-            given_output "./test2.dll", console_output_dll2
+          given_output "./test1.dll", console_output_dll1
+          given_output "./test2.dll", console_output_dll2
 
-            @test_runner.execute "SomeTestSpec"
-            @test_runner.test_results.should == expected_output
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
         end
 
         it "should aggregate output of both passing test executions" do
-            expected_output = <<-output.gsub(/^ {14}/, '')
-              All Passed:
-              when passing other test
-                  it should pass other test
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            All Passed:
+            when passing other test
+                it should pass other test
 
-              All Passed:
-              when passing test
-                  it should pass first test
+            All Passed:
+            when passing test
+                it should pass first test
 
-                  it should pass second test
+                it should pass second test
+            
+            3 tests ran and passed
+          output
 
-            output
+          console_output_dll1 = <<-console.gsub(/^ {12}/, '')
+            Passed    autotestnet.when_passing_other_test.it_should_pass_other_test
+          console
 
-            console_output_dll1 = <<-console.gsub(/^ {14}/, '')
-              Passed    autotestnet.when_passing_other_test.it_should_pass_other_test
-            console
+          console_output_dll2 = <<-console.gsub(/^ {12}/, '')
+            Passed    autotestnet.when_passing_test.it_should_pass_first_test
+            Passed    autotestnet.when_passing_test.it_should_pass_second_test
+          console
 
-            console_output_dll2 = <<-console.gsub(/^ {14}/, '')
-              Passed    autotestnet.when_passing_test.it_should_pass_first_test
-              Passed    autotestnet.when_passing_test.it_should_pass_second_test
-            console
+          given_output "./test1.dll", console_output_dll1
+          given_output "./test2.dll", console_output_dll2
 
-            given_output "./test1.dll", console_output_dll1
-            given_output "./test2.dll", console_output_dll2
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
 
-            @test_runner.execute "SomeTestSpec"
-            @test_runner.test_results.should == expected_output
+        it "should summarize number of passed tests on last line" do
+          expected_output = "3 tests ran and passed"
+
+          console_output_dll1 = <<-console.gsub(/^ {12}/, '')
+            Passed    autotestnet.when_passing_other_test.it_should_pass_other_test
+          console
+
+          console_output_dll2 = <<-console.gsub(/^ {12}/, '')
+            Passed    autotestnet.when_passing_test.it_should_pass_first_test
+            Passed    autotestnet.when_passing_test.it_should_pass_second_test
+          console
+
+          given_output "./test1.dll", console_output_dll1
+          given_output "./test2.dll", console_output_dll2
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.split("\n").last.should == expected_output
         end
 
         it "should aggregate output of both inconclusive test executions" do

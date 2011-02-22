@@ -293,6 +293,7 @@ describe NUnitRunner do
 
                   it should pass second test
 
+              2 tests ran and passed
             output
 
             console_output = <<-console.gsub(/^ {14}/, '')
@@ -322,6 +323,7 @@ describe NUnitRunner do
 
                   it should pass first test
 
+              3 tests ran and passed
             output
 
             console_output = <<-console.gsub(/^ {14}/, '')
@@ -338,6 +340,25 @@ describe NUnitRunner do
 
             @test_runner.execute "SomeTestSpec"
             @test_runner.test_results.should == expected_output
+          end
+
+          it "should have last line stating how many tests passed" do
+            expected_output = "3 tests ran and passed"
+
+            console_output = <<-console.gsub(/^ {14}/, '')
+              Included categories: TemplatesController
+              ***** when_passing_other_test.it_should_pass_other_test
+              ***** when_passing_test.it_should_pass_second_test
+              ***** when_passing_test.it_should_pass_first_test
+
+              Tests run: 3, Errors: 0, Failures: 0, Inconclusive: 0, Time: 0.752043 seconds
+                Not run: 0, Invalid: 0, Ignored: 0, Skipped: 0
+            console
+
+            given_output "./test1.dll", console_output
+
+            @test_runner.execute "SomeTestSpec"
+            @test_runner.test_results.split("\n").last.should == expected_output
           end
         end
       end
@@ -407,6 +428,7 @@ describe NUnitRunner do
 
                 it should pass second test
 
+            3 tests ran and passed
           output
 
           console_output_dll1 = <<-console.gsub(/^ {12}/, '')

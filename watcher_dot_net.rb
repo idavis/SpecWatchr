@@ -332,6 +332,10 @@ OUTPUT
       @test_results += test_output
     end
 
+    if(!@inconclusive && !@failed)
+      @test_results += "#{@tests.count} tests ran and passed\n"
+    end
+
     puts @test_results
   end
 
@@ -536,6 +540,10 @@ OUTPUT
     @status_by_dll.each_value do |value|
       @inconclusive = @inconclusive && value[:inconclusive]
       @failed = @failed || value[:failed]
+    end
+
+    if(!@inconclusive && !@failed)
+      @test_results += "#{@passed_tests.count} tests ran and passed\n"
     end
 
     @test_results
