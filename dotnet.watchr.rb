@@ -1,6 +1,6 @@
 require './watcher_dot_net.rb'
 
-@dw = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :NUnitRunner }
+@dw = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
 
 LambSpecRunner.lamb_spec_path = 
   'C:\program files\lambspec\consoleapp1.exe'
