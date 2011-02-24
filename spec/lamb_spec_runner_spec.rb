@@ -1,7 +1,10 @@
 require "./watcher_dot_net.rb"
 
 describe LambSpecRunner do
-  before(:each) { @test_runner = LambSpecRunner.new "." }
+  before(:each) do
+    @test_runner = LambSpecRunner.new "." 
+    $stdout.stub!(:puts) { }
+  end
   it "should all for set and get of lamb_spec_path" do
     LambSpecRunner.lamb_spec_path = "c:\\lambspec.exe"
     LambSpecRunner.lamb_spec_path.should == "c:\\lambspec.exe"
@@ -27,6 +30,16 @@ describe LambSpecRunner do
 
       @test_runner.execute "SomeTestSpec"
 
+    end
+
+    it "should output test results to standard out" do
+      @test_runner.test_dlls = ["./test1.dll" ]
+      
+      given_output("./test1.dll", "test output")
+
+      $stdout.should_receive(:puts).with("test output")
+
+      @test_runner.execute "SomeTestSpec"
     end
   end
 
@@ -72,13 +85,13 @@ describe LambSpecRunner do
         @test_runner.test_results.should == expected_output
       end
     end
-    
-    def given_output(dll_name, output)
-      @test_runner.stub!(:test_cmd)
-                  .with(dll_name, "SomeTestSpec")
-                  .and_return(dll_name)
+  end
+  
+  def given_output(dll_name, output)
+    @test_runner.stub!(:test_cmd)
+                .with(dll_name, "SomeTestSpec")
+                .and_return(dll_name)
 
-      @sh.stub!(:execute).with(dll_name).and_return(output)
-    end
+    @sh.stub!(:execute).with(dll_name).and_return(output)
   end
 end

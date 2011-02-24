@@ -55,10 +55,6 @@ describe WatcherDotNet do
         @command_shell = mock("command_shell")
         CommandShell.stub!(:new).and_return(@command_shell)
 
-        @spec_finder = mock("spec_finder")
-        SpecFinder.stub!(:new).and_return(@spec_finder)
-        @spec_finder.stub!(:find)
-
         @watcher = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
       end
 
@@ -76,10 +72,6 @@ describe WatcherDotNet do
 
       it "should expose sh" do
         @watcher.sh.should == @command_shell
-      end
-
-      it "should expose spec finder" do
-        @watcher.spec_finder.should == @spec_finder
       end
     end
   end
@@ -104,10 +96,6 @@ describe WatcherDotNet do
 
       @command_shell = mock("command_shell")
       CommandShell.stub!(:new).and_return(@command_shell)
-
-      @spec_finder = mock("spec_finder")
-      SpecFinder.stub!(:new).and_return(@spec_finder)
-      @spec_finder.stub!(:find)
 
       @watcher = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
     end
@@ -147,12 +135,12 @@ describe WatcherDotNet do
         before(:each) { given_build_succeeds }
         
         it "should find the spec" do
-          @spec_finder.should_receive(:find).with("Person.cs")
+          @test_runner.should_receive(:find).with("Person.cs")
         end
         
         context "if spec found" do
           before(:each) { 
-            @spec_finder.stub!(:find).with("Person.cs").and_return("PersonSpec") 
+            @test_runner.stub!(:find).with("Person.cs").and_return("PersonSpec") 
             @test_runner.stub!(:test_results).and_return("all green")
           }
 

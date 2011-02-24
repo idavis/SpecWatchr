@@ -121,6 +121,17 @@ class TestRunner
     dlls
   end
 
+  def find file
+    return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
+    return nil if !file.match(/\./)
+    just_file_name = File.basename(file, ".cs")
+    if(just_file_name.match(/Spec$/))
+      return just_file_name
+    else
+      return just_file_name + "Spec"
+    end
+  end
+
   def usage
     "no usage defined"
   end
@@ -146,6 +157,8 @@ class LambSpecRunner < TestRunner
     test_dlls.each do |dll| 
       @test_results += @sh.execute(test_cmd(dll, test_name))
     end
+
+    puts @test_results
   end
 
   def test_results
@@ -572,21 +585,8 @@ class CommandShell
   end
 end
 
-class SpecFinder
-  def find file
-    return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
-    return nil if !file.match(/\./)
-    just_file_name = File.basename(file, ".cs")
-    if(just_file_name.match(/Spec$/))
-      return just_file_name
-    else
-      return just_file_name + "Spec"
-    end
-  end
-end
-
 class WatcherDotNet
-  attr_accessor :spec_finder, :notifier, :test_runner, :builder, :sh
+  attr_accessor :notifier, :test_runner, :builder, :sh
   require 'find'
 
   EXCLUDES = [/\.dll$/, /debug/i, /TestResult.xml/, /testresults/i, /\.rb$/, /\.suo$/]
@@ -597,7 +597,6 @@ class WatcherDotNet
     @notifier = GrowlNotifier.new
     @builder = Kernel.const_get(config[:builder].to_s).new folder
     @test_runner = Kernel.const_get(config[:test_runner].to_s).new folder
-    @spec_finder = SpecFinder.new
   end
 
   def require_build file
@@ -625,7 +624,7 @@ class WatcherDotNet
 
     test_results = ""
 
-    spec = @spec_finder.find file
+    spec = @test_runner.find file
 
     if(!spec)
       puts "===================== done consider ========================"
