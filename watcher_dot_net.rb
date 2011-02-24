@@ -138,9 +138,11 @@ class TestRunner
 end
 
 class LambSpecRunner < TestRunner
+  attr_accessor :dll
   def initialize folder
     super folder
     @sh = CommandShell.new
+    @dll = Dir["**/*.*"].select {|f| f =~ /^(.{2,}spec[s]?)\/bin\/debug\/\1.dll/i}.first
   end
 
   def self.lamb_spec_path
@@ -154,9 +156,11 @@ class LambSpecRunner < TestRunner
   def execute test_name
     @test_results = ""
 
-    test_dlls.each do |dll| 
-      @test_results += @sh.execute(test_cmd(dll, test_name))
-    end
+    #skipping exotic specfinding incantations and instead
+    #using dlls discovered in initialize
+    #@dlls.each do |dll| 
+      @test_results += @sh.execute(test_cmd(@dll, test_name))
+    #end
 
     puts @test_results
   end
@@ -175,6 +179,11 @@ class LambSpecRunner < TestRunner
 
   def inconclusive
     false
+  end
+  
+  def usage
+    puts
+    puts "Discovered and using: #{@dll}"
   end
 end
 
