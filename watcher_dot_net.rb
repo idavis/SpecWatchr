@@ -138,7 +138,7 @@ class TestRunner
 end
 
 class LambSpecRunner < TestRunner
-  attr_accessor :dll
+  attr_accessor :dll, :failed
   def initialize folder
     super folder
     @sh = CommandShell.new
@@ -155,11 +155,15 @@ class LambSpecRunner < TestRunner
 
   def execute test_name
     @test_results = ""
+    @failed = false;
 
     #skipping exotic specfinding incantations and instead
     #using dlls discovered in initialize
     #@dlls.each do |dll| 
-      @test_results += @sh.execute(test_cmd(@dll, test_name))
+      output = @sh.execute(test_cmd(@dll, test_name))
+      @test_results += output 
+
+      @failed ||= !(@test_results.include? " 0 Failures")
     #end
 
     puts @test_results
