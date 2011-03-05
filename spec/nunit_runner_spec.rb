@@ -416,6 +416,43 @@ describe NUnitRunner do
           @test_runner.test_results.should == expected_output
         end
 
+        it "should only show failed test output even if another dll has all tests passed" do
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            Failed Tests:
+            when failing test
+                it should fail first test
+
+                it should fail second test
+
+          output
+
+          console_output_dll1 = <<-console.gsub(/^ {12}/, '')
+            ***** autotestnet.when_passing_other_test.it_should_pass_other_test
+          console
+
+          console_output_dll2 = <<-console.gsub(/^ {12}/, '')
+            ProcessModel: Default    DomainUsage: Single
+            Execution Runtime: Default
+            Included categories: Repository
+            ***** when_failing_test.it_should_fail_first_test
+            ***** when_failing_test.it_should_fail_second_test
+
+            Tests run: 2, Errors: 0, Failures: 2, Inconclusive: 0, Time: 3.7712157 seconds
+              Not run: 0, Invalid: 0, Ignored: 0, Skipped: 0
+
+            Errors and Failures:
+            1) Test Failure : when_failing_test.it_should_fail_first_test
+
+            2) Test Failure : when_failing_test.it_should_fail_second_test
+          console
+
+          given_output "./test1.dll", console_output_dll1
+          given_output "./test2.dll", console_output_dll2
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
+
         it "should aggregate output of both passing test executions" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             All Passed:

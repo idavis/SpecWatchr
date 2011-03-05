@@ -256,6 +256,33 @@ describe MSTestRunner do
 
       context "multiple dlls" do
         before { @test_runner.stub!(:test_dlls).and_return(["./test1.dll", "./test2.dll"]) }
+        
+
+        it "should only show failed test output even if another dll has all tests passed" do
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            Failed Tests:
+            when failing test
+                it should fail first test
+
+                it should fail second test
+
+          output
+
+          console_output_dll1 = <<-console.gsub(/^ {12}/, '')
+            Passed    autotestnet.when_passing_other_test.it_should_pass_other_test
+          console
+
+          console_output_dll2 = <<-console.gsub(/^ {12}/, '')
+            Failed    autotestnet.when_failing_test.it_should_fail_first_test
+            Failed    autotestnet.when_failing_test.it_should_fail_second_test
+          console
+
+          given_output "./test1.dll", console_output_dll1
+          given_output "./test2.dll", console_output_dll2
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
 
         it "should aggregate output of both failing test executions" do
           expected_output = <<-output.gsub(/^ {12}/, '')

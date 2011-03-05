@@ -331,8 +331,10 @@ OUTPUT
         test_output = "Failed Tests:\n"
         tests_to_display = @tests.select { |k, v| v[:dll] == test_dll && v[:failed] == true }
       elsif(!failed && !inconclusive)
-        test_output = "All Passed:\n"
-        tests_to_display = @tests.select { |k, v| v[:dll] == test_dll && v[:failed] == false }
+        if(!@failed)
+          test_output = "All Passed:\n"
+          tests_to_display = @tests.select { |k, v| v[:dll] == test_dll && v[:failed] == false }
+        end
       else
         if(@inconclusive)
           test_output = "Test Inconclusive:\nNo tests found under #{ test_name }\n\n"
@@ -525,8 +527,10 @@ OUTPUT
       test_output = "Failed Tests:\n"
       tests = @failed_tests.select { |kvp| kvp[:dll] == test_dll }
     elsif(!failed && !inconclusive)
-      test_output = "All Passed:\n"
-      tests = @passed_tests.select { |kvp| kvp[:dll] == test_dll }
+      if(!@failed)
+        test_output = "All Passed:\n"
+        tests = @passed_tests.select { |kvp| kvp[:dll] == test_dll }
+      end
     else
       test_output = "Test Inconclusive:\nNo tests found under #{ test_name }\n\n"
     end
