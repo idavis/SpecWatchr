@@ -25,7 +25,7 @@ describe WatcherDotNet do
       [
         { :test_runner => :MSTestRunner },
         { :test_runner => :NUnitRunner },
-        { :test_runner => :LambSpecRunner }
+        { :test_runner => :NSpecRunner }
       ].each do |kvp|
         it "should find #{kvp[:test_runner].to_s}" do
           @watcher = 

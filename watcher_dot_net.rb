@@ -137,36 +137,34 @@ class TestRunner
   end
 end
 
-class LambSpecRunner < TestRunner
+class NSpecRunner < TestRunner
   attr_accessor :dll, :failed
   def initialize folder
     super folder
     @sh = CommandShell.new
-    @dll = Dir["**/*.*"].select {|f| f =~ /^(.{2,}spec[s]?)\/bin\/debug\/\1.dll/i}.first
   end
 
-  def self.lamb_spec_path
-    @@lamb_spec_path
+  def self.nspec_path
+    @@nspec_path
   end
 
-  def self.lamb_spec_path= value
-    @@lamb_spec_path = value
+  def self.nspec_path= value
+    @@nspec_path = value
   end
 
   def execute test_name
     @test_results = ""
-    @failed = false;
+    @failed = false
 
-    #skipping exotic specfinding incantations and instead
-    #using dlls discovered in initialize
-    #@dlls.each do |dll| 
-      output = @sh.execute(test_cmd(@dll, test_name))
-      @test_results += output 
+    test_dlls.each do |dll| 
+      output = @sh.execute(test_cmd(dll, test_name))
+
+      @test_results += output
 
       @failed ||= !(@test_results.include? " 0 Failures")
-    #end
-
-    puts @test_results
+    end
+    
+    @test_results
   end
 
   def test_results
@@ -174,7 +172,7 @@ class LambSpecRunner < TestRunner
   end
 
   def test_cmd dll, name
-    "\"#{LambSpecRunner.lamb_spec_path}\" \"#{dll}\" #{name}" 
+    return "\"#{NSpecRunner.nspec_path}\" \"#{dll}\""
   end
 
   def failed
@@ -186,7 +184,6 @@ class LambSpecRunner < TestRunner
   end
   
   def usage
-    puts
     puts "Discovered and using: #{@dll}"
   end
 end
@@ -667,4 +664,5 @@ class WatcherDotNet
 
   end
 end
+
 
