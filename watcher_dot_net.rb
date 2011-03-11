@@ -172,7 +172,7 @@ class NSpecRunner < TestRunner
   end
 
   def test_cmd dll, name
-    return "\"#{NSpecRunner.nspec_path}\" \"#{dll}\""
+    return "\"#{NSpecRunner.nspec_path}\" \"#{dll}\" \"#{name}\""
   end
 
   def failed
@@ -185,6 +185,17 @@ class NSpecRunner < TestRunner
   
   def usage
     puts "Discovered and using: #{@dll}"
+  end
+
+  def find file
+    return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
+    return nil if !file.match(/\./)
+    just_file_name = File.basename(file, ".cs")
+    if(just_file_name.match(/^describe_/))
+      return just_file_name
+    else
+      return "describe_" + just_file_name
+    end
   end
 end
 
