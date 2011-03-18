@@ -176,7 +176,7 @@ class NSpecRunner < TestRunner
   end
 
   def failed
-    !@test_results.include? " 0 Failures"
+    !@test_results.include? " 0 Failed"
   end
 
   def inconclusive
