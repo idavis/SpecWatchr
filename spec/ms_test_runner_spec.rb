@@ -162,6 +162,27 @@ describe MSTestRunner do
             @test_runner.test_results.should == expected_output
           end
 
+          it "should set first_failed_test" do
+            expected_output = <<-output.gsub(/^ {14}/, '')
+              Failed Tests:
+              when failing test
+                  it should fail first test
+                  Exception occured on following line
+
+            output
+
+            console_output = <<-console.gsub(/^ {14}/, '')
+              Failed    autotestnet.when_failing_test.it_should_fail_first_test
+              [errormessage] Exception occured on following line
+            console
+
+            given_output "./test1.dll", console_output
+
+            @test_runner.execute "SomeTestSpec"
+            @test_runner.failed.should == true
+            @test_runner.first_failed_test.should == expected_output 
+          end
+
           context "multi line error message" do
             it "should include multi line error message" do
               expected_output = <<-output.gsub(/^ {16}/, '')
@@ -312,6 +333,41 @@ describe MSTestRunner do
 
           @test_runner.execute "SomeTestSpec"
           @test_runner.test_results.should == expected_output
+        end
+
+        it "should set first_failed_test from first executed dll" do
+            expected_output = <<-output.gsub(/^ {12}/, '')
+            Failed Tests:
+            when failing other test
+                it should fail other test
+
+            Failed Tests:
+            when failing test
+                it should fail first test
+
+                it should fail second test
+
+          output
+
+          console_output_dll1 = <<-console.gsub(/^ {12}/, '')
+            Failed    autotestnet.when_failing_other_test.it_should_fail_other_test
+          console
+
+          console_output_dll2 = <<-console.gsub(/^ {12}/, '')
+            Failed    autotestnet.when_failing_test.it_should_fail_first_test
+            Failed    autotestnet.when_failing_test.it_should_fail_second_test
+          console
+
+          given_output "./test1.dll", console_output_dll1
+          given_output "./test2.dll", console_output_dll2
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.first_failed_test.should == <<-expected.gsub(/^ {12}/, '')
+            Failed Tests:
+            when failing other test
+                it should fail other test
+
+          expected
         end
 
         it "should aggregate output of both passing test executions" do

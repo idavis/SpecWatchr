@@ -237,6 +237,41 @@ describe NUnitRunner do
             @test_runner.test_results.should == expected_output
           end
 
+          it "should set first_failed_test" do
+            expected_output = <<-output.gsub(/^ {14}/, '')
+              Failed Tests:
+              when failing test
+                  it should fail first test
+                      Exception occured on following line
+
+            output
+
+            console_output = <<-console.gsub(/^ {14}/, '')
+              ProcessModel: Default    DomainUsage: Single
+              Execution Runtime: Default
+              Included categories: Repository
+              ***** when_failing_test.it_should_fail_first_test
+             
+              Tests run: 1, Errors: 0, Failures: 1, Inconclusive: 0, Time: 3.7712157 seconds
+                Not run: 0, Invalid: 0, Ignored: 0, Skipped: 0
+
+              Errors and Failures:
+              1) Test Failure : when_failing_test.it_should_fail_first_test
+              Exception occured on following line
+            console
+
+            given_output "./test1.dll", console_output
+
+            @test_runner.execute "SomeTestSpec"
+            @test_runner.first_failed_test.should == <<-expected.gsub(/^ {14}/, '')
+              Failed Tests:
+              when failing test
+                  it should fail first test
+                      Exception occured on following line
+
+            expected
+          end
+
           context "multi line error message" do
             it "should include multi line error message" do
               expected_output = <<-output.gsub(/^ {16}/, '')

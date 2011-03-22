@@ -69,6 +69,33 @@ describe NSpecRunner do
       @test_runner.test_results.should == expected_output
     end
 
+    it "it should set first_failed_test" do
+      expected_output = <<-OUTPUT.gsub(/^ {8}/, '')
+        when outputting
+          should output - FAILED - Expected: 1, But was: 2
+          should pass
+
+        **** FAILURES ****
+
+        when outputting. should output. - FAILED
+        Expected: 1, But was: 2
+
+        stack trace line 1
+        stack trace line 2
+        stack trace line 3
+        stack trace line 4
+      OUTPUT
+
+      given_output "./test1.dll", test_output
+
+      @test_runner.execute "SomeTestSpec"
+      @test_runner.first_failed_test.should == <<-expected.gsub(/^ {8}/, '')
+        Failed Tests:
+        when outputting. should output. - FAILED
+        Expected: 1, But was: 2
+      expected
+    end
+
     describe "multiple test dlls" do
       before(:each) { @test_runner.stub!(:test_dlls).and_return(["./test1.dll", "./test2.dll"]) }
 

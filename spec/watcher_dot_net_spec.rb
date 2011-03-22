@@ -184,7 +184,7 @@ describe WatcherDotNet do
               @test_runner.should_receive(:execute).with("PersonSpec") do
                 @test_runner.stub!(:inconclusive).and_return(false)
                 @test_runner.stub!(:failed).and_return(true)
-                @test_runner.stub!(:test_results).and_return("3 tests failed")
+                @test_runner.stub!(:first_failed_test).and_return("3 tests failed")
               end
             end
 

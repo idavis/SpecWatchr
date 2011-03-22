@@ -98,6 +98,8 @@ class RakeBuilder
 end
 
 class TestRunner
+  attr_accessor :first_failed_test
+
   def initialize folder
     @folder = folder
     @test_dlls_override = nil
@@ -321,7 +323,6 @@ OUTPUT
       end
     end
 
-    test_output = ""
     @test_results = ""
 
     dll_test_results.each_value do |value|
@@ -332,6 +333,7 @@ OUTPUT
     tests_to_display = Hash.new
 
     test_dlls.each do |test_dll|
+      test_output = ""
       failed = dll_test_results[test_dll][:failed]
       inconclusive = dll_test_results[test_dll][:inconclusive]
 
@@ -342,12 +344,15 @@ OUTPUT
         if(!@failed)
           test_output = "All Passed:\n"
           tests_to_display = @tests.select { |k, v| v[:dll] == test_dll && v[:failed] == false }
+        else
+          test_output = ""  #need a test for this line
+          tests_to_display = Hash.new #need a test for this line
         end
       else
         if(@inconclusive)
           test_output = "Test Inconclusive:\nNo tests found under #{ test_name }\n\n"
         else
-          test_output = ""
+          test_output = ""  #need a test for this line
         end
 
         tests_to_display = Hash.new
@@ -363,6 +368,10 @@ OUTPUT
         test_output += "    " + v[:name] + "\n"
         test_output += v[:error] if(v[:error])
         test_output += "\n"
+
+        if(@failed && @first_failed_test == nil)
+          @first_failed_test = test_output
+        end
       end
 
       @test_results += test_output
@@ -538,6 +547,8 @@ OUTPUT
       if(!@failed)
         test_output = "All Passed:\n"
         tests = @passed_tests.select { |kvp| kvp[:dll] == test_dll }
+      else
+        test_output = ""
       end
     else
       test_output = "Test Inconclusive:\nNo tests found under #{ test_name }\n\n"
@@ -553,6 +564,10 @@ OUTPUT
       test_output += "    " + line[:name] + "\n"
       test_output += "    " + line[:errormessage]+ "\n" if(line[:errormessage])
       test_output += "\n"
+
+      if(failed && @first_failed_test == nil)
+        @first_failed_test = test_output
+      end
     end
 
     @test_results += test_output
@@ -569,7 +584,7 @@ OUTPUT
   
       set_test_status test_dll, test_output
       itemize_test_results test_dll, test_output, test_name
-      set_test_result_output test_dll, test_name
+      
     end
 
     @inconclusive = true
@@ -578,6 +593,10 @@ OUTPUT
     @status_by_dll.each_value do |value|
       @inconclusive = @inconclusive && value[:inconclusive]
       @failed = @failed || value[:failed]
+    end
+
+    test_dlls.each do |test_dll|
+      set_test_result_output test_dll, test_name
     end
 
     if(!@inconclusive && !@failed)
@@ -667,7 +686,7 @@ class WatcherDotNet
       puts @test_runner.usage
     end
 
-    @notifier.execute "tests failed", @test_runner.test_results, 'red' if @test_runner.failed
+    @notifier.execute "tests failed", @test_runner.first_failed_test, 'red' if @test_runner.failed
     
     @notifier.execute @test_runner.test_results.split("\n").last, '', 'green' if !@test_runner.failed and !@test_runner.inconclusive
 
