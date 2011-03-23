@@ -105,8 +105,8 @@ describe NSpecRunner do
     it "it should set first_failed_test" do
       expected_output = <<-OUTPUT.gsub(/^ {8}/, '')
         when outputting
-          should output - FAILED - Expected: 1, But was: 2
           should pass
+          should output - FAILED - Expected: 1, But was: 2
 
         **** FAILURES ****
 

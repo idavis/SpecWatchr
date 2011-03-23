@@ -418,7 +418,6 @@ OUTPUT
   end
 
   def test_cmd test_dll, test_name
-     #replace the word Spec in test name....move SpecFinder somewhere inside of each test runner
      "\"#{@@nunit_path}\" \"#{test_dll}\" /nologo /labels /include=#{test_name.gsub(/spec/, "").gsub(/Spec/, "")}"
   end
 
@@ -643,6 +642,8 @@ end
 
 class CommandShell
   def execute cmd
+    puts cmd + "\n\n"
+
     str=""
     STDOUT.sync = true # That's all it takes...
     IO.popen(cmd+" 2>&1") do |pipe| # Redirection is performed using operators
@@ -651,6 +652,9 @@ class CommandShell
         str+=s # This is synchronous!
       end
     end
+    
+    puts str + "\n\n"
+
     str
   end
 end
