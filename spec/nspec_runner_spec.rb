@@ -10,9 +10,9 @@ describe NSpecRunner do
     NSpecRunner.nspec_path.should == "c:\\nspec.exe"
   end
 
-  xit "should should resolve test command" do
+  it "should should resolve test command" do
     NSpecRunner.nspec_path = "nspec.exe"
-    @test_runner.test_cmd("test1.dll", "SomeTestSpec").should == '"nspec.exe" "test1.dll" SomeTestSpec'
+    @test_runner.test_cmd("test1.dll", "SomeTestSpec").should == '"nspec.exe" "test1.dll" "SomeTestSpec"'
   end
 
   describe "when executing tests" do
@@ -23,8 +23,8 @@ describe NSpecRunner do
       @test_runner = NSpecRunner.new "."
     end
 
-    xit "should execute tests against each dll" do
-      @test_runner.test_dlls = ["./test1.dll", "./test2.dll" ]
+    it "should execute tests against each dll" do
+      @test_runner.stub!(:test_dlls).and_return(["./test1.dll", "./test2.dll" ])
       
       @sh.should_receive(:execute).twice()
 
@@ -33,7 +33,7 @@ describe NSpecRunner do
     end
 
     it "should output test results to standard out" do
-      @test_runner.dll = "./test1.dll" 
+      @test_runner.stub!(:test_dlls).and_return(["./test1.dll"])
       
       given_output("./test1.dll", "test output")
 
@@ -43,13 +43,46 @@ describe NSpecRunner do
     end
   end
 
+  describe "statuses" do
+    before(:each) do
+      @sh = mock("CommandShell")
+      CommandShell.stub!(:new).and_return(@sh)
+      @test_runner = NSpecRunner.new "."
+      @sh.stub!(:execute).and_return""
+      @test_runner.stub!(:test_dlls).and_return(["./test1.dll"])
+    end
+
+    it "should marked as failed if output contains **** FAILURES ****" do
+      test_output = <<-OUTPUT.gsub(/^ {8}/, '')
+        when outputting
+          should output - FAILED - Expected: 1, But was: 2
+          should pass
+
+        **** FAILURES ****
+
+        when outputting. should output. - FAILED
+        Expected: 1, But was: 2
+
+        stack trace line 1
+        stack trace line 2
+        stack trace line 3
+        stack trace line 4
+      OUTPUT
+
+      given_output "./test1.dll", test_output
+
+      @test_runner.execute "SomeTestSpec"
+      @test_runner.failed.should == true
+    end
+  end
+
   describe "output formatting" do
     before(:each) do
       @sh = mock("CommandShell")
       CommandShell.stub!(:new).and_return(@sh)
       @test_runner = NSpecRunner.new "."
       @sh.stub!(:execute).and_return""
-      @test_runner.dll = "./test1.dll"
+      @test_runner.stub!(:test_dlls).and_return(["./test1.dll"])
     end
 
     it "should pass along output provided by NSpecRunner.exe" do
@@ -86,7 +119,7 @@ describe NSpecRunner do
         stack trace line 4
       OUTPUT
 
-      given_output "./test1.dll", test_output
+      given_output "./test1.dll", expected_output
 
       @test_runner.execute "SomeTestSpec"
       @test_runner.first_failed_test.should == <<-expected.gsub(/^ {8}/, '')
@@ -99,7 +132,7 @@ describe NSpecRunner do
     describe "multiple test dlls" do
       before(:each) { @test_runner.stub!(:test_dlls).and_return(["./test1.dll", "./test2.dll"]) }
 
-      xit "should aggregate test output" do
+      it "should aggregate test output" do
         dll_1_output = "output from dll1\n"
         dll_2_output = "output from dll2\n"
         

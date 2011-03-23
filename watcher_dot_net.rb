@@ -140,10 +140,11 @@ class TestRunner
 end
 
 class NSpecRunner < TestRunner
-  attr_accessor :dll, :failed
+  attr_accessor :failed
   def initialize folder
     super folder
     @sh = CommandShell.new
+    @test_statuses = Hash.new
   end
 
   def self.nspec_path
@@ -157,15 +158,40 @@ class NSpecRunner < TestRunner
   def execute test_name
     @test_results = ""
     @failed = false
+    @test_statuses.clear
 
     test_dlls.each do |dll| 
       output = @sh.execute(test_cmd(dll, test_name))
 
-      @test_results += output
+      test_result = Hash.new
+      in_failure = 0
 
-      @failed ||= !(@test_results.include? " 0 Failures")
+      output.each_line do |line|
+        if(in_failure > 0)
+          @first_failed_test += line
+          in_failure -= 1
+        end
+
+        if(/\*\*\*\* FAILURES \*\*\*\*/.match(line))
+          test_result[:failed] = true
+          if(@first_failed_test == nil)
+            @first_failed_test = "Failed Tests:"
+            in_failure = 3
+          end
+        end
+      end
+
+      @test_statuses[dll] = test_result
+
+      @test_results += output
     end
-    
+
+    @test_statuses.each_value do |value|
+      @failed = @failed || value[:failed]
+    end
+
+    puts @test_results
+
     @test_results
   end
 
@@ -176,11 +202,7 @@ class NSpecRunner < TestRunner
   def test_cmd dll, name
     return "\"#{NSpecRunner.nspec_path}\" \"#{dll}\" \"#{name}\""
   end
-
-  def failed
-    !@test_results.include? " 0 Failed"
-  end
-
+  
   def inconclusive
     false
   end
@@ -679,8 +701,6 @@ class WatcherDotNet
     
     test_output = @test_runner.execute spec
 
-    puts test_output
-    
     if @test_runner.inconclusive
       @notifier.execute "no spec found", "create spec #{spec}", 'red'
       puts @test_runner.usage
