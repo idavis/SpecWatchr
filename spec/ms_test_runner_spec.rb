@@ -351,6 +351,7 @@ describe MSTestRunner do
 
           console_output_dll1 = <<-console.gsub(/^ {12}/, '')
             Failed    autotestnet.when_failing_other_test.it_should_fail_other_test
+            [errormessage] Exception occured on following line
           console
 
           console_output_dll2 = <<-console.gsub(/^ {12}/, '')
@@ -366,6 +367,7 @@ describe MSTestRunner do
             Failed Tests:
             when failing other test
                 it should fail other test
+                Exception occured on following line
 
           expected
         end

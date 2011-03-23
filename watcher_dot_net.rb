@@ -292,9 +292,12 @@ OUTPUT
     @failed = false
     @test_results = ""
     @tests = Hash.new
+    @first_failed_test = nil
 
     test_dlls.each do |test_dll| 
+      
       console_output = @sh.execute(test_cmd(test_dll, test_name))
+      puts console_output
       test_result = Hash.new
       test_result[:inconclusive] = false
       test_result[:failed] = false
@@ -391,7 +394,7 @@ OUTPUT
         test_output += v[:error] if(v[:error])
         test_output += "\n"
 
-        if(@failed && @first_failed_test == nil)
+        if(@failed && @first_failed_test == nil && v[:failed])
           @first_failed_test = test_output
         end
       end
@@ -416,7 +419,7 @@ OUTPUT
 
   def test_cmd test_dll, test_name
      #replace the word Spec in test name....move SpecFinder somewhere inside of each test runner
-    "\"#{@@nunit_path}\" \"#{test_dll}\" /nologo /labels /include=#{test_name.gsub(/spec/, "").gsub(/Spec/, "")}"
+     "\"#{@@nunit_path}\" \"#{test_dll}\" /nologo /labels /include=#{test_name.gsub(/spec/, "").gsub(/Spec/, "")}"
   end
 
   def inconclusive
@@ -584,10 +587,10 @@ OUTPUT
       end
     
       test_output += "    " + line[:name] + "\n"
-      test_output += "    " + line[:errormessage]+ "\n" if(line[:errormessage])
+      test_output += "    " + line[:errormessage] + "\n" if(line[:errormessage])
       test_output += "\n"
 
-      if(failed && @first_failed_test == nil)
+      if(failed && @first_failed_test == nil && line[:errormessage])
         @first_failed_test = test_output
       end
     end
@@ -600,6 +603,7 @@ OUTPUT
     @failed_tests = Array.new
     @passed_tests = Array.new
     @status_by_dll.clear
+    @first_failed_test = nil
 
     test_dlls.each do |test_dll|
       test_output = @sh.execute "#{test_cmd(test_dll, test_name)}"
