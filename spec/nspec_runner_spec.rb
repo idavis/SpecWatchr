@@ -31,16 +31,6 @@ describe NSpecRunner do
       @test_runner.execute "SomeTestSpec"
 
     end
-
-    it "should output test results to standard out" do
-      @test_runner.stub!(:test_dlls).and_return(["./test1.dll"])
-      
-      given_output("./test1.dll", "test output")
-
-      $stdout.should_receive(:puts).with("test output")
-
-      @test_runner.execute "SomeTestSpec"
-    end
   end
 
   describe "statuses" do
@@ -113,10 +103,6 @@ describe NSpecRunner do
         when outputting. should output. - FAILED
         Expected: 1, But was: 2
 
-        stack trace line 1
-        stack trace line 2
-        stack trace line 3
-        stack trace line 4
       OUTPUT
 
       given_output "./test1.dll", expected_output
@@ -126,6 +112,41 @@ describe NSpecRunner do
         Failed Tests:
         when outputting. should output. - FAILED
         Expected: 1, But was: 2
+      expected
+    end
+
+    it "it should set first_failed_test and disregard stack trace" do
+      expected_output = <<-OUTPUT.gsub(/^ {8}/, '')
+        describe TicTacToGame
+          describe game structure
+            should have board
+            board should have 3 rows - FAILED - Expected: 3, But was: 9
+
+        **** FAILURES ****
+
+        describe TicTacToGame. describe game structure. board should has 3 rows
+        NUnit.Framework.AssertionException:   Expected: 3
+          But was:  9
+
+           at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
+
+           at NUnit.Framework.Assert.AreEqual(Object expected, Object actual)
+           at NSpec.AssertionExtensions.should_be(Object actual, Object expected) in C:\Users\Amir\NSpec\NSpec\Asserti
+        onExtensions.cs:line 42
+           at TicTacToTest.describe_TicTacToGame.<describe_game_structure>b__2() in c:\Development\TicTacToTest\TicTac
+        ToTest\describe_TicTacToGame.cs:line 19
+           at NSpec.Domain.Example.Run(Context context) in C:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 70
+
+        2 Examples, 1 Failed, 0 Pending
+      OUTPUT
+
+      given_output "./test1.dll", expected_output
+
+      @test_runner.execute "SomeTestSpec"
+      @test_runner.first_failed_test.should == <<-expected.gsub(/^ {8}/, '')
+        Failed Tests:
+        describe TicTacToGame. describe game structure. board should has 3 rows
+        NUnit.Framework.AssertionException:   Expected: 3
       expected
     end
 

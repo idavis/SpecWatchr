@@ -134,6 +134,20 @@ class TestRunner
     end
   end
 
+  def get_test_dll_for(file_name)
+    rootDirectory = /\.\/.*\//.match(file_name)
+
+    test_dll = nil
+
+    test_dlls.each { |dll| test_dll = dll if /#{rootDirectory}/.match dll }
+
+    test_dll
+  end
+
+  def debug_mode?(file_name)
+    
+  end
+
   def usage
     "no usage defined"
   end
@@ -159,6 +173,7 @@ class NSpecRunner < TestRunner
     @test_results = ""
     @failed = false
     @test_statuses.clear
+    @first_failed_test = nil
 
     test_dlls.each do |dll| 
       output = @sh.execute(test_cmd(dll, test_name))
@@ -189,8 +204,6 @@ class NSpecRunner < TestRunner
     @test_statuses.each_value do |value|
       @failed = @failed || value[:failed]
     end
-
-    puts @test_results
 
     @test_results
   end

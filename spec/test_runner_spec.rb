@@ -35,5 +35,23 @@ describe TestRunner do
       @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjTest.dll"
       @test_runner.test_dlls[1].should == "./SomeOtherProjTests/bin/debug/SomeOtherProjTests.dll"
     end
+
+    it "should find dll for file that is inside of a test project" do
+      Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjTest.dll")
+
+      @test_runner.get_test_dll_for('./SomeProjTest/test_file.cs').should == "./SomeProjTest/bin/debug/SomeProjTest.dll"
+    end
+
+    it "should return null if file is not in test project" do
+      Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjTest.dll")
+
+      @test_runner.get_test_dll_for('./Model/Person.cs').should == nil
+    end
+
+    context "determining debug_mode" do
+      it "should return true if file contents starts with //debug" do
+        @test_runner.debug_mode? './SomeProjTest/test_file.cs'
+      end
+    end
   end
 end
