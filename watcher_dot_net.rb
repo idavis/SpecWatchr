@@ -18,12 +18,6 @@ class GrowlNotifier
 
     `#{opts.join ' '}`
   end
-  def red
-    
-  end
-  def green
-    File.expand_path('green.png')
-  end
 end
 
 class MSBuilder

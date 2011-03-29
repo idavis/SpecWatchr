@@ -8,10 +8,10 @@ $configFileTo = "dotnet.watchr.rb"
 $watchrFileFrom = $toolsPath + "\watcher_dot_net.rb"
 $watchrFileTo = "watcher_dot_net.rb"
 
-$redFileFrom = $toolsPath + "\watcher_dot_net.rb"
+$redFileFrom = $toolsPath + "\red.png"
 $redFileTo = "red.png"
 
-$greenFileFrom = $toolsPath + "\watcher_dot_net.rb"
+$greenFileFrom = $toolsPath + "\green.png"
 $greenFileTo = "green.png"
 
 if(!(Test-Path $configFileTo))
