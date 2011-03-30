@@ -112,32 +112,69 @@ describe NSpecRunner do
         Failed Tests:
         when outputting. should output. - FAILED
         Expected: 1, But was: 2
+
       expected
     end
 
-    it "it should set first_failed_test and disregard stack trace" do
+    it "it should set first_failed_test and include stack trace" do
       expected_output = <<-OUTPUT.gsub(/^ {8}/, '')
-        describe TicTacToGame
-          describe game structure
-            should have board
-            board should have 3 rows - FAILED - Expected: 3, But was: 9
+        describe specifications
+          when creating specifications
+            true should be false - FAILED - Expected: False, But was: True
+            enumerable should be empty
+            enumerable should contain 1
+            enumerable should not contain 1 - FAILED - Expected: collection containing 2, But was: < 1 >
+            1 should be 2 - FAILED - Expected: 2, But was: 1
+            1 should be 1
+            1 should not be 1 - FAILED - Expected: not 1, But was: 1
+            1 should not be 2
+            "" should not be null
+            spec should not be null - FAILED - Expected: not null, But was: null
 
         **** FAILURES ****
 
-        describe TicTacToGame. describe game structure. board should has 3 rows
-        NUnit.Framework.AssertionException:   Expected: 3
-          But was:  9
-
+        describe specifications. when creating specifications. true should be false.
+        Expected: False, But was: True
            at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
+           at NUnit.Framework.Assert.IsFalse(Boolean condition)
+           at NSpec.AssertionExtensions.should_be_false(Boolean actual) in c:\Users\Amir\NSpec\NSpec\AssertionExtensions.cs:line 32
+           at describe_specifications.<when_creating_specifications>b__0() in c:\Users\Amir\NSpec\SampleSpecs\WebSite\describe_specifications.cs:line 7
+           at NSpec.Domain.Example.Run(Context context) in c:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 38
 
+        describe specifications. when creating specifications. enumerable should not contain 1.
+        Expected: collection containing 2, But was: < 1 >
+           at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
+           at NUnit.Framework.CollectionAssert.Contains(IEnumerable collection, Object actual, String message, Object[] args)
+           at NUnit.Framework.CollectionAssert.Contains(IEnumerable collection, Object actual)
+           at NSpec.AssertionExtensions.should_contain[T](IEnumerable`1 collection, T t) in c:\Users\Amir\NSpec\NSpec\AssertionExtensions.cs:line 82
+           at describe_specifications.<when_creating_specifications>b__3() in c:\Users\Amir\NSpec\SampleSpecs\WebSite\describe_specifications.cs:line 10
+           at NSpec.Domain.Example.Run(Context context) in c:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 38
+
+        describe specifications. when creating specifications. 1 should be 2.
+        Expected: 2, But was: 1
+           at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
            at NUnit.Framework.Assert.AreEqual(Object expected, Object actual)
-           at NSpec.AssertionExtensions.should_be(Object actual, Object expected) in C:\Users\Amir\NSpec\NSpec\Asserti
-        onExtensions.cs:line 42
-           at TicTacToTest.describe_TicTacToGame.<describe_game_structure>b__2() in c:\Development\TicTacToTest\TicTac
-        ToTest\describe_TicTacToGame.cs:line 19
-           at NSpec.Domain.Example.Run(Context context) in C:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 70
+           at NSpec.AssertionExtensions.should_be(Object actual, Object expected) in c:\Users\Amir\NSpec\NSpec\AssertionExtensions.cs:line 42
+           at describe_specifications.<when_creating_specifications>b__4() in c:\Users\Amir\NSpec\SampleSpecs\WebSite\describe_specifications.cs:line 11
+           at NSpec.Domain.Example.Run(Context context) in c:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 38
 
-        2 Examples, 1 Failed, 0 Pending
+        describe specifications. when creating specifications. 1 should not be 1.
+        Expected: not 1, But was: 1
+           at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
+           at NUnit.Framework.Assert.AreNotEqual(Object expected, Object actual)
+           at NSpec.AssertionExtensions.should_not_be(Object actual, Object expected) in c:\Users\Amir\NSpec\NSpec\AssertionExtensions.cs:line 47
+           at describe_specifications.<when_creating_specifications>b__6() in c:\Users\Amir\NSpec\SampleSpecs\WebSite\describe_specifications.cs:line 13
+           at NSpec.Domain.Example.Run(Context context) in c:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 38
+
+        describe specifications. when creating specifications. spec should not be null.
+        Expected: not null, But was: null
+           at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
+           at NUnit.Framework.Assert.IsNotNull(Object anObject)
+           at NSpec.AssertionExtensions.should_not_be_null(Object o) in c:\Users\Amir\NSpec\NSpec\AssertionExtensions.cs:line 12
+           at describe_specifications.<when_creating_specifications>b__9() in c:\Users\Amir\NSpec\SampleSpecs\WebSite\describe_specifications.cs:line 16
+           at NSpec.Domain.Example.Run(Context context) in c:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 38
+
+        10 Examples, 5 Failed, 0 Pending
       OUTPUT
 
       given_output "./test1.dll", expected_output
@@ -145,8 +182,14 @@ describe NSpecRunner do
       @test_runner.execute "SomeTestSpec"
       @test_runner.first_failed_test.should == <<-expected.gsub(/^ {8}/, '')
         Failed Tests:
-        describe TicTacToGame. describe game structure. board should has 3 rows
-        NUnit.Framework.AssertionException:   Expected: 3
+        describe specifications. when creating specifications. true should be false.
+        Expected: False, But was: True
+           at NUnit.Framework.Assert.That(Object actual, IResolveConstraint expression, String message, Object[] args)
+           at NUnit.Framework.Assert.IsFalse(Boolean condition)
+           at NSpec.AssertionExtensions.should_be_false(Boolean actual) in c:\Users\Amir\NSpec\NSpec\AssertionExtensions.cs:line 32
+           at describe_specifications.<when_creating_specifications>b__0() in c:\Users\Amir\NSpec\SampleSpecs\WebSite\describe_specifications.cs:line 7
+           at NSpec.Domain.Example.Run(Context context) in c:\Users\Amir\NSpec\NSpec\Domain\Example.cs:line 38
+
       expected
     end
 

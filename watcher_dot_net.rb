@@ -173,19 +173,25 @@ class NSpecRunner < TestRunner
       output = @sh.execute(test_cmd(dll, test_name))
 
       test_result = Hash.new
-      in_failure = 0
+      in_failure = false
+      first_new_line = false
 
       output.each_line do |line|
-        if(in_failure > 0)
+        if(in_failure == true)
           @first_failed_test += line
-          in_failure -= 1
+          if(line.strip == "" && first_new_line)
+            first_new_line = false
+          elsif(line.strip == "")
+            in_failure = false
+          end
         end
 
         if(/\*\*\*\* FAILURES \*\*\*\*/.match(line))
           test_result[:failed] = true
           if(@first_failed_test == nil)
             @first_failed_test = "Failed Tests:"
-            in_failure = 3
+            in_failure = true
+            first_new_line = true
           end
         end
       end
