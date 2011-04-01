@@ -265,7 +265,7 @@ namespace YourUnitTests
 {
     [TestFixture]
     [Category("Person")]
-    public void when_initializing_person
+    public class when_initializing_person
     {
         [Test]
         public void should_set_first_name_to_empty_string()
@@ -277,7 +277,7 @@ namespace YourUnitTests
 
     [TestFixture]
     [Category("Person")]
-    public void some_other_test_associated_with_person
+    public class some_other_test_associated_with_person
     {
         [Test]
         public void should_run_test_if_Person_class_changes()
@@ -480,7 +480,7 @@ public class Person
 namespace YourUnitTests.PersonSpec
 {
     [TestClass]
-    public void when_initializing_person
+    public class when_initializing_person
     {
         [TestMethod]
         public void should_set_first_name_to_empty_string()
@@ -491,7 +491,7 @@ namespace YourUnitTests.PersonSpec
     }
 
     [TestClass]
-    public void some_other_test_associated_with_person
+    public class some_other_test_associated_with_person
     {
         [TestMethod]
         public void should_run_test_if_Person_class_changes()
