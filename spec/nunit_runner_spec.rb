@@ -18,6 +18,14 @@ describe NUnitRunner do
     @test_runner.test_cmd("test1.dll", "SomeTestspec").should == "\"nunit.exe\" \"test1.dll\" /nologo /labels /include=SomeTest"
   end
 
+  it "should resolve test command based on spec name starting with describe" do
+
+    NUnitRunner.nunit_path = "nunit.exe"
+    @test_runner.test_cmd("test1.dll", "describe_SomeTest").should == "\"nunit.exe\" \"test1.dll\" /nologo /labels /include=SomeTest"
+
+    @test_runner.test_cmd("test1.dll", "describe_SomeTest").should == "\"nunit.exe\" \"test1.dll\" /nologo /labels /include=SomeTest"
+  end
+
   describe "when executing tests" do
     before(:each) do
       @sh = mock("CommandShell")
