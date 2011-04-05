@@ -3,7 +3,7 @@ require './watcher_dot_net.rb'
 @dw = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
 
 NSpecRunner.nspec_path = 
-  'C:\program files\NSpecRunner\NSpecRunner.exe'
+  '.\packages\nspec.0.9.24\tools\nspecrunner.exe'
 
 MSTestRunner.ms_test_path = 
   'C:\program files (x86)\microsoft visual studio 10.0\common7\ide\mstest.exe'

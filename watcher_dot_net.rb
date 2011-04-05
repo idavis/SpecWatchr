@@ -12,6 +12,8 @@ class GrowlNotifier
 
     text.gsub!('"', "'")
 
+    text = text + "\n\n---"
+
     opts = ["\"#{GrowlNotifier.growl_path}\"", "\"#{text}\"", "/t:\"#{title}\""]
 
     opts << "/i:\"#{File.expand_path("#{color}.png")}\"" 
