@@ -14,34 +14,34 @@ describe NSpecRunner do
   it "should attempt to find latest version of nspec using major version" do
     Find.stub!(:find)
         .with(".")
-        .and_yield("./packages/nspec.1.0.0/tools/nspecrunner.exe")
-        .and_yield("./packages/nspec.10.0.0/tools/nspecrunner.exe")
-        .and_yield("./packages/nspec.3.0.0/tools/nspecrunner.exe")
+        .and_yield("./packages/nspec.1.0.0/tools/NSpecRunner.exe")
+        .and_yield("./packages/nspec.10.0.0/tools/NSpecRunner.exe")
+        .and_yield("./packages/nspec.3.0.0/tools/NSpecRunner.exe")
 
     NSpecRunner.nspec_path = nil
-    NSpecRunner.nspec_path.should == "./packages/nspec.10.0.0/tools/nspecrunner.exe"
+    NSpecRunner.nspec_path.should == "./packages/nspec.10.0.0/tools/NSpecRunner.exe"
   end
 
   it "should attempt to find latest version of nspec using minor version" do
     Find.stub!(:find)
         .with(".")
-        .and_yield("./packages/nspec.1.1.0/tools/nspecrunner.exe")
-        .and_yield("./packages/nspec.1.10.0/tools/nspecrunner.exe")
-        .and_yield("./packages/nspec.1.3.0/tools/nspecrunner.exe")
+        .and_yield("./packages/nspec.1.1.0/tools/NSpecRunner.exe")
+        .and_yield("./packages/nspec.1.10.0/tools/NSpecRunner.exe")
+        .and_yield("./packages/nspec.1.3.0/tools/NSpecRunner.exe")
 
     NSpecRunner.nspec_path = nil
-    NSpecRunner.nspec_path.should == "./packages/nspec.1.10.0/tools/nspecrunner.exe"
+    NSpecRunner.nspec_path.should == "./packages/nspec.1.10.0/tools/NSpecRunner.exe"
   end
 
   it "should attempt to find latest version of nspec using build version" do
     Find.stub!(:find)
         .with(".")
-        .and_yield("./packages/nspec.1.0.1/tools/nspecrunner.exe")
-        .and_yield("./packages/nspec.1.0.10/tools/nspecrunner.exe")
-        .and_yield("./packages/nspec.1.0.3/tools/nspecrunner.exe")
+        .and_yield("./packages/nspec.1.0.1/tools/NSpecRunner.exe")
+        .and_yield("./packages/nspec.1.0.10/tools/NSpecRunner.exe")
+        .and_yield("./packages/nspec.1.0.3/tools/NSpecRunner.exe")
 
     NSpecRunner.nspec_path = nil
-    NSpecRunner.nspec_path.should == "./packages/nspec.1.0.10/tools/nspecrunner.exe"
+    NSpecRunner.nspec_path.should == "./packages/nspec.1.0.10/tools/NSpecRunner.exe"
   end
   
   it "should should resolve test command" do

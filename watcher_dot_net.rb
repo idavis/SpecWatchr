@@ -155,6 +155,7 @@ class NSpecRunner < TestRunner
     super folder
     @sh = CommandShell.new
     @test_statuses = Hash.new
+    @@nspec_path_override = nil
   end
 
   def self.nspec_path
@@ -163,7 +164,7 @@ class NSpecRunner < TestRunner
     exes = Array.new
 
     Find.find(".") do |f|
-      exes << f if(/tools\/nspecrunner.exe$/.match(f))
+      exes << f if(/tools\/nspecrunner.exe$/.match(f.downcase))
     end
 
     exes.sort do |a, b|  

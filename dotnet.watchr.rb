@@ -7,8 +7,9 @@ require './watcher_dot_net.rb'
 
 #if you choose :NSpecRunner as your :test_runner,
 #this is the execution path for the NSpecRunner, the recommendation is that you install nspec via nuget: Install-Package nspec
-NSpecRunner.nspec_path = 
-  '.\packages\nspec.0.9.24\tools\nspecrunner.exe'
+#if you do install from nuget, specwatchr will automatically find the file.
+#if you want to explicitly set the execution path for nspecrunner.exe, uncomment the line below
+#NSpecRunner.nspec_path = '.\packages\nspec.0.9.24\tools\nspecrunner.exe'
 
 #if you choose :MSTestRunner as your :test_runner
 #this is the execution path for MSTest.exe
@@ -42,6 +43,7 @@ GrowlNotifier.growl_path =
 
 
 #everything after this is specwatchr specific, you dont have to worry about this stuff
+
 def handle filename
 	@dw.consider filename
 end
