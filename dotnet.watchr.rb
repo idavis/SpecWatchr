@@ -1,28 +1,47 @@
 require './watcher_dot_net.rb'
 
-@dw = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
+#edit the code below to pick your builder and runner, 
+#for :builder you can use either :MSBuilder, or :RakeBuilder
+#for :test_runner you can use :NSpecRunner, :NUnitRunner, or :MSTestRunner
+@dw = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :NSpecRunner }
 
+#if you choose :NSpecRunner as your :test_runner,
+#this is the execution path for the NSpecRunner, the recommendation is that you install nspec via nuget: Install-Package nspec
 NSpecRunner.nspec_path = 
   '.\packages\nspec.0.9.24\tools\nspecrunner.exe'
 
+#if you choose :MSTestRunner as your :test_runner
+#this is the execution path for MSTest.exe
 MSTestRunner.ms_test_path = 
   'C:\program files (x86)\microsoft visual studio 10.0\common7\ide\mstest.exe'
 
+#if you choose :NUnitRunner as your :test_runner
+#this is the execution path for NUnit.exe
 NUnitRunner.nunit_path = 
   'C:\program files (x86)\nunit 2.5.9\bin\net-2.0\nunit-console-x86.exe'
 
+#if you choose :MSBuilder as your :builder
+#this is the execution path for MSBuild.exe
 MSBuilder.ms_build_path =
   'C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe'
 
+#if you choose :RakeBuilder as your :builder
+#this is the rake command that will get executed
 RakeBuilder.rake_command = 'rake'
 
+#all notifications are faciltated throw Growl for Windows
 #set to empty string if you dont have growl installed
 GrowlNotifier.growl_path = 
   'C:\program files (x86)\Growl for Windows\growlnotify.exe'
 
-#use/uncomment the following to override test dll finding behavior
+#specwathcr tries to automatically find your test dlls (it'll look for projects that end in the work Test, or Tests)
+#if for some reason you deviate from this convension, you can override the dlls selected using the following line of code
 #@dw.test_runner.test_dlls = ['.\SampleSpecs\bin\Debug\SampleSpecs.dll']
 
+
+
+
+#everything after this is specwatchr specific, you dont have to worry about this stuff
 def handle filename
 	@dw.consider filename
 end

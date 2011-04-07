@@ -158,11 +158,33 @@ class NSpecRunner < TestRunner
   end
 
   def self.nspec_path
-    @@nspec_path
+    return @@nspec_path_override if @@nspec_path_override != nil
+
+    exes = Array.new
+
+    Find.find(".") do |f|
+      exes << f if(/tools\/nspecrunner.exe$/.match(f))
+    end
+
+    exes.sort do |a, b|  
+      version_a = a.gsub("./packages/nspec.", "").gsub("/tools/nspecrunner.exe", "")
+      version_b = b.gsub("./packages/nspec.", "").gsub("/tools/nspecrunner.exe", "")
+
+      tokens_a = version_a.split(/\./)
+      tokens_b = version_b.split(/\./)
+
+      if((tokens_a[0].to_i <=> tokens_b[0].to_i) != 0)
+        tokens_a[0].to_i <=> tokens_b[0].to_i 
+      elsif((tokens_a[1].to_i <=> tokens_b[1].to_i) != 0)
+        tokens_a[1].to_i <=> tokens_b[1].to_i
+      else
+        tokens_a[2].to_i <=> tokens_b[2].to_i
+      end
+    end.last
   end
 
   def self.nspec_path= value
-    @@nspec_path = value
+    @@nspec_path_override = value
   end
 
   def execute test_name
@@ -353,7 +375,7 @@ OUTPUT
         elsif(failure_patterns.any? { |pattern| pattern.match(line) })
           selected_pattern = failure_patterns.select { |pattern| pattern.match(line) != nil }.first
           full = line.gsub!(selected_pattern, "").strip
-          full = full[3..-1]
+          full = full[3..-1].strip #the strip call needs to be put under test
           @tests[full][:failed] = true
           last_test = @tests[full]
           in_failures = true
