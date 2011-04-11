@@ -50,7 +50,8 @@ end
 
 def reload
   puts "Reloading SpecWatchr because a project/sln file changed."
-  `touch dotnet.watchr.rb`
+  #`touch dotnet.watchr.rb`
+  FileUtils.touch "dotnet.watchr.rb"
 end
 
 def tutorial
