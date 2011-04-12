@@ -112,7 +112,7 @@ class TestRunner
 
     Find.find(@folder) do |f| 
       if(true == [/test.dll$/, /tests.dll$/, /spec.dll$/, /specs.dll$/].any? { |pattern| f.downcase.match(pattern) && f.downcase.match(/bin\/debug/) })
-        dlls << f
+        dlls << f if(!f.downcase.match(/\/nspec.dll/))
       end
     end
 

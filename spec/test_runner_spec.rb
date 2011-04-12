@@ -44,6 +44,12 @@ describe TestRunner do
       @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjTests.dll"
     end
 
+    it "should disregard the nspec.dll" do
+      Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/NSpec.dll")
+      @test_runner.test_dlls.count.should == 0
+    end
+
+
     it "should allow for the redefinition of test_dlls" do
       @test_runner.test_dlls = ["first.dll", "second.dll"]
 
