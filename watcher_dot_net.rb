@@ -119,17 +119,6 @@ class TestRunner
     dlls
   end
 
-  def find file
-    return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
-    return nil if !file.match(/\./)
-    just_file_name = File.basename(file, ".cs")
-    if(just_file_name.match(/Spec$/))
-      return just_file_name
-    else
-      return just_file_name + "Spec"
-    end
-  end
-
   def get_test_dll_for(file_name)
     rootDirectory = /\.\/.*\//.match(file_name)
 
@@ -140,8 +129,15 @@ class TestRunner
     test_dll
   end
 
-  def debug_mode?(file_name)
-    
+  def find file
+    return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
+    return nil if !file.match(/\./)
+    just_file_name = File.basename(file, ".cs")
+    if(just_file_name.match(/^describe_/))
+      return just_file_name
+    else
+      return "describe_" + just_file_name
+    end
   end
 
   def usage
@@ -248,17 +244,6 @@ class NSpecRunner < TestRunner
   def usage
     puts "Discovered and using: #{@dll}"
   end
-
-  def find file
-    return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
-    return nil if !file.match(/\./)
-    just_file_name = File.basename(file, ".cs")
-    if(just_file_name.match(/^describe_/))
-      return just_file_name
-    else
-      return "describe_" + just_file_name
-    end
-  end
 end
 
 
@@ -277,7 +262,7 @@ class NUnitRunner < TestRunner
 NUnitRunner runner will use the following exe to run your tests: 
 #{NUnitRunner.nunit_path}
 
-NUnitRunner for SpecWatchr uses category attributes for running unit tests.  Let's say you have a class called Person (located in file Person.cs).  You'll need to create a test class called PersonSpec.cs (all tests associated with Person.cs should go under PersonSpec.cs).  Once the test class is created all tests defined should be decorated with the Category attribute.  For example:
+NUnitRunner for SpecWatchr uses category attributes for running unit tests.  Let's say you have a class called Person (located in file Person.cs).  You'll need to create a test class called describe_Person.cs (all tests associated with Person.cs should go under describe_Person.cs).  Once the test class is created all tests defined should be decorated with the Category attribute.  For example:
 
 //here is the person class (located in Person.cs)
 public class Person 
@@ -285,7 +270,7 @@ public class Person
     public string FirstName { get; set; }
 }
 
-//here is the test class (located in PersonSpec.cs)...notice the category attribute
+//here is the test class (located in describe_Person.cs)...notice the category attribute
 namespace YourUnitTests
 {
     [TestFixture]
@@ -466,7 +451,6 @@ OUTPUT
   def failed
     @failed
   end
-
 end
 
 class MSTestRunner < TestRunner
@@ -493,7 +477,7 @@ class MSTestRunner < TestRunner
 MSTestRunner will use the following exe to run your tests: 
 #{MSTestRunner.ms_test_path}
 
-MSTestRunner for SpecWatchr uses a convension based approach for running unit tests.  Let's say you have a class called Person (located in file Person.cs).  You'll need to create a test class called PersonSpec.cs (all tests associated with Person.cs should go under PersonSpec.cs).  Once the test class is created, change the namespace of the class to include PersonSpec.  For example:
+MSTestRunner for SpecWatchr uses a convension based approach for running unit tests.  Let's say you have a class called Person (located in file Person.cs).  You'll need to create a test class called describe_Person.cs (all tests associated with Person.cs should go under describe_Person.cs).  Once the test class is created, change the namespace of the class to include PersonSpec.  For example:
 
 //here is the person class (located in Person.cs)
 public class Person 
@@ -501,8 +485,8 @@ public class Person
     public string FirstName { get; set; }
 }
 
-//here is the test class (located in PersonSpec.cs)...notice the namespace
-namespace YourUnitTests.PersonSpec
+//here is the test class (located in describe_Person.cs)...notice the namespace
+namespace YourUnitTests.describe_Person
 {
     [TestClass]
     public class when_initializing_person
@@ -526,7 +510,7 @@ namespace YourUnitTests.PersonSpec
     }
 }
 
-Whenever you save Person.cs, all tests under the namespace PersonSpec will get executed.
+Whenever you save Person.cs, all tests under the namespace describe_Person will get executed.
 OUTPUT
   end
 
@@ -633,6 +617,8 @@ OUTPUT
     end
 
     @test_results += test_output
+
+    puts @test_results
   end
 
   def execute test_name
@@ -676,6 +662,7 @@ OUTPUT
       return "\"#{MSTestRunner.ms_test_path}\" /testcontainer:#{test_dll} /runconfig:#{test_config} /nologo /detail:errormessage"
     end
   end 
+  
 end
 
 class CommandShell

@@ -1,5 +1,28 @@
 describe TestRunner do
   before(:each) { @test_runner = TestRunner.new "." }
+  
+  describe "finding impacted tests" do
+    it "should return nil if solution file changed" do
+      @test_runner.find('SomeSolution.sln').should == nil
+    end
+
+    it "should return nil if project file changed" do
+      @test_runner.find('TestProj.csproj').should == nil
+    end
+
+    it "should return nil if file doesn't contain an extension" do
+      @test_runner.find('TestProj/').should == nil
+    end
+
+    it "if file name doesn't start with describe_, should append describe_" do
+      @test_runner.find('Person.cs').should == 'describe_Person'
+    end
+
+    it "if file with describe_, should just return file" do
+      @test_runner.find('Person.cs').should == 'describe_Person'
+    end
+  end
+
   describe "finding test dlls" do
     it "should find a dll ending in test.dll" do
       Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjTest.dll")
@@ -46,12 +69,6 @@ describe TestRunner do
       Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjTest.dll")
 
       @test_runner.get_test_dll_for('./Model/Person.cs').should == nil
-    end
-
-    context "determining debug_mode" do
-      it "should return true if file contents starts with //debug" do
-        @test_runner.debug_mode? './SomeProjTest/test_file.cs'
-      end
     end
   end
 end
