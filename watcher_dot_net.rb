@@ -111,7 +111,7 @@ class TestRunner
     dlls = Array.new
 
     Find.find(@folder) do |f| 
-      if(true == [/test.dll$/, /tests.dll$/].any? { |pattern| f.downcase.match(pattern) && f.downcase.match(/bin\/debug/) })
+      if(true == [/test.dll$/, /tests.dll$/, /spec.dll$/, /specs.dll$/].any? { |pattern| f.downcase.match(pattern) && f.downcase.match(/bin\/debug/) })
         dlls << f
       end
     end

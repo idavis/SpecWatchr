@@ -2,12 +2,12 @@
 <package> 
   <metadata> 
     <id>specwatchr</id> 
-    <version>1.3.16</version> 
+    <version>1.3.18</version> 
     <authors>Amir Rajan, Matt Florence</authors>
-    <description>Set of ruby scripts that help you do continuous testing in .Net (supports MSTest and NUnit).</description> 
+    <description>Set of ruby scripts that help you do continuous testing in .Net (supports NSpec, MSTest and NUnit).</description> 
     <language>en-US</language>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
-    <projectUrl>http://www.github.com/amirrajan/specwatchr</projectUrl>
+    <projectUrl>http://nspec.org/continuoustesting</projectUrl>
     <tags>test testing autotest bdd</tags>
   </metadata>
   <files>

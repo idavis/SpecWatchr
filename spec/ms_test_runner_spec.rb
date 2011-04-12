@@ -1,7 +1,11 @@
 require "./watcher_dot_net.rb"
 
 describe MSTestRunner do
-  before(:each) { @test_runner = MSTestRunner.new "." }
+  before(:each) do 
+    @test_runner = MSTestRunner.new "." 
+    $stdout.stub!(:puts) { }
+  end
+
   context "initializing MSTestRunner" do
     it "should default ms test runner exe to be the 64bit installation location" do
       MSTestRunner.ms_test_path.should == "C:\\program files (x86)\\microsoft visual studio 10.0\\common7\\ide\\mstest.exe"

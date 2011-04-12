@@ -29,6 +29,16 @@ describe TestRunner do
       @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjTest.dll"
     end
 
+    it "should find a dll ending in spec.dll" do
+      Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjSpec.dll")
+      @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjSpec.dll"
+    end
+
+    it "should find a dll ending in specs.dll" do
+      Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjSpecs.dll")
+      @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjSpecs.dll"
+    end
+
     it "should find a dll ending in tests.dll" do
       Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/SomeProjTests.dll")
       @test_runner.test_dlls[0].should == "./SomeProjTest/bin/debug/SomeProjTests.dll"
