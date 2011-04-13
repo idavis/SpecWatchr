@@ -1,4 +1,4 @@
-For detailed instructions/screencasts, go to http://www.github.com/amirrajan/specwatchr
+For detailed instructions/screencasts, go to http://nspec.org/continuoustesting
 
 1. Open up Ruby command prompt (v 1.9.2)
 
