@@ -1,6 +1,7 @@
 param($rootPath, $toolsPath, $package, $project)
 
-$usageFile = $toolsPath + "\Usage.txt"
+$usageFileFrom = $toolsPath + "\specwatchr-usage.txt"
+$usageFileTo = "specwatchr-usage.txt"
 
 $configFileFrom = $toolsPath + "\dotnet.watchr.rb"
 $configFileTo = "dotnet.watchr.rb"
@@ -20,5 +21,5 @@ if(!(Test-Path $configFileTo))
   Copy-Item $watchrFileFrom $watchrFileTo
   Copy-Item $redFileFrom $redFileTo
   Copy-Item $greenFileFrom $greenFileTo
-  Start-Process $usageFile
+  Copy-Item $usageFileFrom $usageFileTo
 }
