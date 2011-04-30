@@ -44,6 +44,8 @@ GrowlNotifier.growl_path =
 
 #everything after this is specwatchr specific, you dont have to worry about this stuff
 
+@dw.notifier.execute "specwatchr loaded/reloaded", "builder: #{@dw.builder.class}\ntest runner: #{@dw.test_runner.class}\nconfig file: dotnet.watchr.rb", "green"
+
 def handle filename
 	@dw.consider filename
 end

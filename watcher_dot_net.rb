@@ -131,10 +131,15 @@ class TestRunner
 
   def find file
     return nil if [/\.sln$/, /\.csproj$/].any? { |pattern| file.match(pattern) }
+
     return nil if !file.match(/\./)
+
     just_file_name = File.basename(file, ".cs")
+    
     if(just_file_name.match(/^describe_/))
       return just_file_name
+    elsif(file.match(/describe_.*\//))
+      return file.match(/describe_.*\//).to_s.gsub "/", ""
     else
       return "describe_" + just_file_name
     end
@@ -717,6 +722,13 @@ class WatcherDotNet
     @notifier.execute "build failed", build_output, 'red' if @builder.failed
 
     if @builder.failed
+      puts "===================== done consider ========================"
+      return
+    end
+
+    if @test_runner.test_dlls.count == 0
+      @notifier.execute "discovery", "specwatchr didn't find any test dll's. specwatchr looks for a .csproj that ends in Test, Tests, Spec, or Specs.  If you do have that, stop specwatchr, rebuild your solution and start specwatchr back up. If you want to explicitly specify the test dll's, you can do so via dotnet.watchr.rb.", "red"
+
       puts "===================== done consider ========================"
       return
     end

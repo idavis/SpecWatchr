@@ -2,6 +2,40 @@ require "./watcher_dot_net.rb"
 
 describe WatcherDotNet do
   before(:each) { $stdout.stub!(:puts) { } }
+
+  context "discovery of usage" do
+    before(:each) do
+        @builder = mock("builder")
+        MSBuilder.stub!(:new).and_return(@builder)
+        @builder.stub!(:failed).and_return(false)
+        @builder.stub!(:execute)
+
+        @notifier = mock("notifier")
+        GrowlNotifier.stub!(:new).and_return(@notifier)
+        @notifier.stub!(:execute)
+
+        @test_runner = mock("test_runner")
+        MSTestRunner.stub!(:new).and_return(@test_runner)
+        @test_runner.stub!(:inconclusive).and_return(false)
+        @test_runner.stub!(:failed).and_return(false)
+        @test_runner.stub!(:usage).and_return("usage")
+
+        @command_shell = mock("command_shell")
+        CommandShell.stub!(:new).and_return(@command_shell)
+
+        @watcher = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
+    end
+
+      context "no test dlls found" do
+        before(:each) { @test_runner.stub!(:test_dlls).and_return([]) }
+
+        it "should growl if not test dlls are found" do
+          @notifier.should_receive(:execute).with("discovery", "specwatchr didn't find any test dll's. specwatchr looks for a .csproj that ends in Test, Tests, Spec, or Specs.  If you do have that, stop specwatchr, rebuild your solution and start specwatchr back up.", "red")
+          @watcher.consider "Person.cs"
+        end
+      end
+  end
+
   describe "when initializing dot net watchr" do
     context "finding builder" do
       [
@@ -96,7 +130,7 @@ describe WatcherDotNet do
 
       @command_shell = mock("command_shell")
       CommandShell.stub!(:new).and_return(@command_shell)
-
+      @test_runner.stub!(:test_dlls).and_return(["test.dll"])
       @watcher = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
     end
     

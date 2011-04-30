@@ -21,6 +21,14 @@ describe TestRunner do
     it "if file with describe_, should just return file" do
       @test_runner.find('Person.cs').should == 'describe_Person'
     end
+
+    it "if path contains describe_, should return that part of the path" do
+      @test_runner.find('./test/describe_Person/when_saving_person.cs').should == 'describe_Person'
+    end
+
+    it "if path and file both contain describe_, should return describe of file" do
+      @test_runner.find('./test/describe_Other/describe_Person.cs').should == 'describe_Person'
+    end
   end
 
   describe "finding test dlls" do
