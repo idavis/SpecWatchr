@@ -6,6 +6,8 @@ describe NSpecRunner do
     $stdout.stub!(:puts) { }
   end
 
+
+
   it "should all for set and get of nspec_path" do
     NSpecRunner.nspec_path = "c:\\nspec.exe"
     NSpecRunner.nspec_path.should == "c:\\nspec.exe"

@@ -22,6 +22,11 @@ describe WatcherDotNet do
 
         @command_shell = mock("command_shell")
         CommandShell.stub!(:new).and_return(@command_shell)
+        @test_runner.stub!(:test_dlls).and_return(["test1.dll"])
+        @test_runner.stub!(:execute).with("")
+        @test_runner.stub!(:test_results).and_return("")
+        @test_runner.stub!(:find).with("Person.cs").and_return("")
+
 
         @watcher = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :MSTestRunner }
     end
@@ -30,9 +35,23 @@ describe WatcherDotNet do
         before(:each) { @test_runner.stub!(:test_dlls).and_return([]) }
 
         it "should growl if not test dlls are found" do
-          @notifier.should_receive(:execute).with("discovery", "specwatchr didn't find any test dll's. specwatchr looks for a .csproj that ends in Test, Tests, Spec, or Specs.  If you do have that, stop specwatchr, rebuild your solution and start specwatchr back up.", "red")
+          @notifier.should_receive(:execute).with("discovery", "specwatchr didn't find any test dll's. specwatchr looks for a .csproj that ends in Test, Tests, Spec, or Specs.  If you do have that, stop specwatchr, rebuild your solution and start specwatchr back up. If you want to explicitly specify the test dll's, you can do so via dotnet.watchr.rb.", "red")
           @watcher.consider "Person.cs"
         end
+      end
+
+      it "should growl configuration if first run" do
+        @notifier.should_receive(:execute).with("specwatchr", "builder: #{@watcher.builder.class}\ntest runner: #{@watcher.test_runner.class}\nconfig file: dotnet.watchr.rb", "green")
+
+        @watcher.first_run = true
+
+        @watcher.consider "Person.cs"
+      end
+
+      it "should set first_run to false after growling" do
+        @watcher.first_run = true
+        @watcher.consider "Person.cs"
+        @watcher.first_run.should == false
       end
   end
 

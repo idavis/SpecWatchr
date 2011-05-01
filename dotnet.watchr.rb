@@ -43,16 +43,12 @@ GrowlNotifier.growl_path =
 
 
 #everything after this is specwatchr specific, you dont have to worry about this stuff
-
-@dw.notifier.execute "specwatchr loaded/reloaded", "builder: #{@dw.builder.class}\ntest runner: #{@dw.test_runner.class}\nconfig file: dotnet.watchr.rb", "green"
-
 def handle filename
 	@dw.consider filename
 end
 
-def reload
-  puts "Reloading SpecWatchr because a project/sln file changed."
-  #`touch dotnet.watchr.rb`
+def reload file
+  @dw.notifier.execute "reloading", "Reloading SpecWatchr because #{file} changed.", "green"
   FileUtils.touch "dotnet.watchr.rb"
 end
 
@@ -86,5 +82,6 @@ end
 tutorial
 
 watch ('.*.cs$') { |md| handle md[0] }
-watch ('.*.csproj$') { |md| reload }
-watch ('.*.sln$') { |md| reload }
+watch ('(.*.csproj$)|(.*.sln$)') do |md| 
+  reload md[0]
+end

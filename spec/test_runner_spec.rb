@@ -26,8 +26,8 @@ describe TestRunner do
       @test_runner.find('./test/describe_Person/when_saving_person.cs').should == 'describe_Person'
     end
 
-    it "if path and file both contain describe_, should return describe of file" do
-      @test_runner.find('./test/describe_Other/describe_Person.cs').should == 'describe_Person'
+    it "if path and file both contain describe_, should return describe of folder" do
+      @test_runner.find('./test/describe_Other/describe_Person.cs').should == 'describe_Other'
     end
   end
 

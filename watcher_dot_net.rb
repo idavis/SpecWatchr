@@ -136,10 +136,10 @@ class TestRunner
 
     just_file_name = File.basename(file, ".cs")
     
-    if(just_file_name.match(/^describe_/))
-      return just_file_name
-    elsif(file.match(/describe_.*\//))
+    if(file.match(/describe_.*\//))
       return file.match(/describe_.*\//).to_s.gsub "/", ""
+    elsif(just_file_name.match(/^describe_/))
+      return just_file_name
     else
       return "describe_" + just_file_name
     end
@@ -690,7 +690,7 @@ class CommandShell
 end
 
 class WatcherDotNet
-  attr_accessor :notifier, :test_runner, :builder, :sh
+  attr_accessor :notifier, :test_runner, :builder, :sh, :first_run
   require 'find'
 
   EXCLUDES = [/\.dll$/, /debug/i, /TestResult.xml/, /testresults/i, /\.rb$/, /\.suo$/]
@@ -701,6 +701,7 @@ class WatcherDotNet
     @notifier = GrowlNotifier.new
     @builder = Kernel.const_get(config[:builder].to_s).new folder
     @test_runner = Kernel.const_get(config[:test_runner].to_s).new folder
+    @first_run = true
   end
 
   def require_build file
@@ -708,6 +709,11 @@ class WatcherDotNet
   end
     
   def consider file
+    if(@first_run)
+      @notifier.execute "specwatchr", "builder: #{@builder.class}\ntest runner: #{@test_runner.class}\nconfig file: dotnet.watchr.rb", "green"
+      @first_run = false
+    end
+
     puts "====================== changed: #{file} ===================="
     puts "====================== excluded ============================" if false == require_build(file)		
 
