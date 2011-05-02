@@ -35,8 +35,8 @@ RakeBuilder.rake_command = 'rake'
 GrowlNotifier.growl_path = 
   'C:\program files (x86)\Growl for Windows\growlnotify.exe'
 
-#specwathcr tries to automatically find your test dlls (it'll look for projects that end in the work Test, or Tests)
-#if for some reason you deviate from this convension, you can override the dlls selected using the following line of code
+#specwathcr tries to automatically find your test dlls (it'll look for projects that end in the word Test, Tests, Spec or Specs)
+#if for some reason you deviate from this convention, you can OVERRIDE the dlls selected using the following line of code
 #@dw.test_runner.test_dlls = ['.\SampleSpecs\bin\Debug\SampleSpecs.dll']
 
 
