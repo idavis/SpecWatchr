@@ -159,6 +159,34 @@ class NSpecRunner < TestRunner
     @@nspec_path_override = nil
   end
 
+  def find file
+    return nil if super(file) == nil
+
+    just_file_name = File.basename(file, ".cs")
+    
+    if(file.match(/describe_.*\//))
+      return file.match(/describe_.*\//).to_s.gsub "/", ""
+    elsif(just_file_name.match(/^describe_/))
+      return just_file_name
+    elsif(contained_in_test_project(file))
+      return just_file_name
+    else
+      return "describe_" + just_file_name
+    end
+  end
+
+  def root_folder file
+    return file.gsub("./", "").gsub(/\/.*/, "")
+  end
+
+  def contained_in_test_project file
+    test_dlls.each do |dll|
+      return true if root_folder(dll) == root_folder(file)
+    end
+
+    false
+  end
+
   def self.nspec_path
     return @@nspec_path_override if @@nspec_path_override != nil
 
