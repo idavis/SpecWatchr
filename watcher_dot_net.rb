@@ -94,11 +94,12 @@ class RakeBuilder
 end
 
 class TestRunner
-  attr_accessor :first_failed_test
+  attr_accessor :first_failed_test, :executed_context
 
   def initialize folder
     @folder = folder
     @test_dlls_override = nil
+    @executed_context = Hash.new
   end
   
   def test_dlls= override
@@ -164,12 +165,12 @@ class NSpecRunner < TestRunner
 
     just_file_name = File.basename(file, ".cs")
     
-    if(file.match(/describe_.*\//))
-      return file.match(/describe_.*\//).to_s.gsub "/", ""
-    elsif(just_file_name.match(/^describe_/))
-      return just_file_name
-    elsif(contained_in_test_project(file))
-      return just_file_name
+    if(contained_in_test_project(file))
+      return file.gsub("./", "")
+                 .gsub(root_folder(file), "")
+                 .gsub(/^\//, "")
+                 .gsub(".cs", "")
+                 .gsub("/", "\\.")
     else
       return "describe_" + just_file_name
     end

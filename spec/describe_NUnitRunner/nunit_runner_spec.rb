@@ -584,6 +584,8 @@ describe NUnitRunner do
         end
       end
     end
+
+
     
     def given_output(dll_name, output)
       @test_runner.stub!(:test_cmd)
