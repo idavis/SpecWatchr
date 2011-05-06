@@ -5,8 +5,8 @@ describe NSpecRunner do
     @test_runner = NSpecRunner.new "." 
     $stdout.stub!(:puts) { }
     @changed_file = "./SomeProjectTests/when_saving_person.cs" 
-    @dll = "./SomeProjectTests/bin/debug/SomeProjTest.dll"
-    Find.stub!(:find).with(".").and_yield(@dll)
+    @dll = ["./SomeProjectTests/bin/Debug/SomeProjTest.dll"]
+    Dir.stub(:[]).and_return @dll
   end
 
   describe "impacted test find strategy for nspec" do
@@ -40,7 +40,7 @@ describe NSpecRunner do
 
     context "test file does not start with describe, but is inside a test project" do
       it "should return dll_folder without ./ prefix" do
-        @test_runner.root_folder(@dll).should == "SomeProjectTests"
+        @test_runner.root_folder(@dll[0]).should == "SomeProjectTests"
       end
 
       it "should return name of test file even though it doesn't match name" do

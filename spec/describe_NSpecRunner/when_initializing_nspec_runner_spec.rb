@@ -6,6 +6,11 @@ describe NSpecRunner do
     $stdout.stub!(:puts) { }
   end
 
+  it "should find nspec project dlls" do
+    Dir.stub(:[]).and_return ['./SomeProj/bin/Debug/NSpec.dll']
+    @test_runner.test_dlls.should == ['./SomeProj/bin/Debug/SomeProj.dll']
+  end
+
   it "should set and get of nspec_path" do
     NSpecRunner.nspec_path = "c:\\nspec.exe"
     NSpecRunner.nspec_path.should == "c:\\nspec.exe"

@@ -160,6 +160,10 @@ class NSpecRunner < TestRunner
     @@nspec_path_override = nil
   end
 
+  def test_dlls
+    Dir['**/*NSpec.dll'].select {|f| !f.downcase.include?('packages')}.map {|f| f.gsub(/([^\/]*)\/bin\/Debug\/.*/, '\1/bin/Debug/\1.dll')}
+  end
+
   def find file
     return nil if super(file) == nil
 
@@ -182,7 +186,7 @@ class NSpecRunner < TestRunner
 
   def contained_in_test_project file
     test_dlls.each do |dll|
-      return true if root_folder(dll) == root_folder(file)
+      return root_folder(dll) == root_folder(file)
     end
 
     false

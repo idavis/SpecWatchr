@@ -54,7 +54,7 @@ describe TestRunner do
 
     it "should disregard the nspec.dll" do
       Find.stub!(:find).with(".").and_yield("./SomeProjTest/bin/debug/NSpec.dll")
-      @test_runner.test_dlls.count.should == 0
+      @test_runner.test_dlls.should_not include("./SomeProjTest/bin/debug/NSpec.dll")
     end
 
 
