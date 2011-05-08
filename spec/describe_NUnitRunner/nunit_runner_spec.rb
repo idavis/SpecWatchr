@@ -17,7 +17,7 @@ describe NUnitRunner do
     it "should execute tests against each dll" do
       @test_runner.stub!(:test_dlls).and_return(["./test1.dll", "./test2.dll"])
       @sh.should_receive(:execute).twice()
-      @test_runner.execute "SomeTestSpec"
+      @test_runner.execute "describe_SomeTest"
     end
 
     describe "test statuses" do
@@ -37,7 +37,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", test_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.inconclusive.should == true
           end
         end
@@ -60,7 +60,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", test_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.failed.should == true
           end
 
@@ -80,7 +80,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.failed.should == false
             @test_runner.inconclusive.should == false
           end
@@ -95,7 +95,7 @@ describe NUnitRunner do
             given_output "./test1.dll", "Tests run: 0"
             given_output "./test2.dll", "Tests run: 0"
             
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.inconclusive.should == true
             @test_runner.failed.should == false
           end
@@ -106,7 +106,7 @@ describe NUnitRunner do
             given_output "./test1.dll", "Errors and Failures:"
             given_output "./test2.dll", "Tests run: 0"
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.failed.should == true
             @test_runner.inconclusive.should == false
           end
@@ -117,7 +117,7 @@ describe NUnitRunner do
             given_output "./test1.dll", "Passed    when_testing.should_pass"
             given_output "./test2.dll", "Passed    when_testing.should_pass_1"
             
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.failed.should == false
             @test_runner.inconclusive.should == false
           end
@@ -126,7 +126,7 @@ describe NUnitRunner do
             given_output "./test1.dll", "Passed    when_testing.should_pass"
             given_output "./test2.dll", "Tests run: 0"
             
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.failed.should == false
             @test_runner.inconclusive.should == false
           end
@@ -147,13 +147,13 @@ describe NUnitRunner do
         it "should return no specs found" do
           expected_output = <<-OUTPUT.gsub(/^ {12}/, '')
             Test Inconclusive:
-            No tests found under SomeTestSpec
+            No tests found under describe_SomeTest
 
           OUTPUT
 
           given_output "./test1.dll", "Tests run: 0"
 
-          @test_runner.execute "SomeTestSpec"
+          @test_runner.execute "describe_SomeTest"
           @test_runner.test_results.should == expected_output
         end
       end
@@ -191,7 +191,7 @@ describe NUnitRunner do
 
               given_output "./test1.dll", console_output
 
-              @test_runner.execute "SomeTestSpec"
+              @test_runner.execute "describe_SomeTest"
               @test_runner.test_results.should == expected_output
             end
           end
@@ -221,7 +221,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", console_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.test_results.should == expected_output
           end
 
@@ -250,7 +250,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", console_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.first_failed_test.should == <<-expected.gsub(/^ {14}/, '')
               Failed Tests:
               when failing test
@@ -299,7 +299,7 @@ describe NUnitRunner do
 
               given_output "./test1.dll", console_output
 
-              @test_runner.execute "SomeTestSpec"
+              @test_runner.execute "describe_SomeTest"
               @test_runner.test_results.should == expected_output
             end
           end
@@ -329,7 +329,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", console_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.test_results.should == expected_output
           end
         end
@@ -361,7 +361,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", console_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.test_results.should == expected_output
           end
 
@@ -380,7 +380,7 @@ describe NUnitRunner do
 
             given_output "./test1.dll", console_output
 
-            @test_runner.execute "SomeTestSpec"
+            @test_runner.execute "describe_SomeTest"
             @test_runner.test_results.split("\n").last.should == expected_output
           end
         end
@@ -435,7 +435,7 @@ describe NUnitRunner do
           given_output "./test1.dll", console_output_dll1
           given_output "./test2.dll", console_output_dll2
 
-          @test_runner.execute "SomeTestSpec"
+          @test_runner.execute "describe_SomeTest"
           @test_runner.test_results.should == expected_output
         end
 
@@ -472,7 +472,7 @@ describe NUnitRunner do
           given_output "./test1.dll", console_output_dll1
           given_output "./test2.dll", console_output_dll2
 
-          @test_runner.execute "SomeTestSpec"
+          @test_runner.execute "describe_SomeTest"
           @test_runner.test_results.should == expected_output
         end
 
@@ -503,24 +503,24 @@ describe NUnitRunner do
           given_output "./test1.dll", console_output_dll1
           given_output "./test2.dll", console_output_dll2
 
-          @test_runner.execute "SomeTestSpec"
+          @test_runner.execute "describe_SomeTest"
           @test_runner.test_results.should == expected_output
         end
 
         it "should aggregate output of both inconclusive test executions" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Test Inconclusive:
-            No tests found under SomeTestSpec
+            No tests found under describe_SomeTest
 
             Test Inconclusive:
-            No tests found under SomeTestSpec
+            No tests found under describe_SomeTest
             
           output
 
           given_output "./test1.dll", "Tests run: 0" 
           given_output "./test2.dll", "Tests run: 0"
 
-          @test_runner.execute "SomeTestSpec"
+          @test_runner.execute "describe_SomeTest"
           @test_runner.test_results.should == expected_output
         end
 
@@ -559,7 +559,7 @@ describe NUnitRunner do
           given_output "./test1.dll", console_output_dll1
           given_output "./test2.dll", console_output_dll2
 
-          @test_runner.execute "SomeTestSpec"
+          @test_runner.execute "describe_SomeTest"
           @test_runner.test_results.should == expected_output
         end
       end
@@ -567,7 +567,7 @@ describe NUnitRunner do
     
     def given_output(dll_name, output)
       @test_runner.stub!(:test_cmd)
-                  .with(dll_name, "SomeTestSpec")
+                  .with(dll_name, "describe_SomeTest")
                   .and_return(dll_name)
 
       @sh.stub!(:execute).with(dll_name).and_return(output)
