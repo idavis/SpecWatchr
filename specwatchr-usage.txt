@@ -1,5 +1,7 @@
 For detailed instructions/screencasts, go to http://nspec.org/continuoustesting
 
+[if downloaded from git hub, copy dotnet.watchr.rb and watcher_dot_net.rb to your solution directory and follow the instructions below]
+
 1. Open up Ruby command prompt (v 1.9.2)
 
 2. enter the following command to install watchr gem (if you dont have it installed): 
