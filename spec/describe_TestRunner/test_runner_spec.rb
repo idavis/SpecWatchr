@@ -57,7 +57,6 @@ describe TestRunner do
       @test_runner.test_dlls.should_not include("./SomeProjTest/bin/debug/NSpec.dll")
     end
 
-
     it "should allow for the redefinition of test_dlls" do
       @test_runner.test_dlls = ["first.dll", "second.dll"]
 

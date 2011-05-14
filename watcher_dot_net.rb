@@ -160,12 +160,19 @@ class NSpecRunner < TestRunner
     @@nspec_path_override = nil
   end
 
+  def test_dlls= override
+    @test_dlls_override = override 
+  end
+
   def test_dlls
+    return  @test_dlls_override if !@test_dlls_override.nil?
+
     Dir['**/*NSpec.dll'].select {|f| !f.downcase.include?('packages')}.map {|f| f.gsub(/([^\/]*)\/bin\/Debug\/.*/, '\1/bin/Debug/\1.dll')}
   end
 
   def find file
     return nil if super(file) == nil
+
 
     just_file_name = File.basename(file, ".cs")
     

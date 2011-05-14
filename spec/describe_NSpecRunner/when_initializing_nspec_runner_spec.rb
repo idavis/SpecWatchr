@@ -4,11 +4,21 @@ describe NSpecRunner do
   before(:each) do
     @test_runner = NSpecRunner.new "." 
     $stdout.stub!(:puts) { }
+    Dir.stub(:[]).and_return ['./SomeProj/bin/Debug/NSpec.dll']
   end
 
   it "should find nspec project dlls" do
-    Dir.stub(:[]).and_return ['./SomeProj/bin/Debug/NSpec.dll']
     @test_runner.test_dlls.should == ['./SomeProj/bin/Debug/SomeProj.dll']
+  end
+
+  context "test dlls have been overridden" do
+    before(:each) do
+      @test_runner.test_dlls = ['test1.dll']
+    end
+
+    it "should return overridden dlls" do
+      @test_runner.test_dlls.should == ['test1.dll']
+    end
   end
 
   it "should set and get of nspec_path" do
