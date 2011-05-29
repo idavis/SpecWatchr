@@ -81,7 +81,7 @@ end
 
 tutorial
 
-watch ('.*.cs$') { |md| handle md[0] }
+watch ('.*.\.cs$') { |md| handle md[0] }
 watch ('(.*.csproj$)|(.*.sln$)') do |md| 
   reload md[0]
 end

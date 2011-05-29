@@ -173,7 +173,6 @@ class NSpecRunner < TestRunner
   def find file
     return nil if super(file) == nil
 
-
     just_file_name = File.basename(file, ".cs")
     
     if(contained_in_test_project(file))
