@@ -1,5 +1,10 @@
 require './watcher_dot_net.rb'
 
+#MIT License
+#http://www.github.com/amirrajan/specwatchr
+#Copyright (c) 2011 Amir Rajan, Matt Florence
+#Copyright (c) 2011 The NSpec Development Team
+
 #edit the code below to pick your builder and runner, 
 #for :builder you can use either :MSBuilder, or :RakeBuilder
 #for :test_runner you can use :NSpecRunner, :NUnitRunner, or :MSTestRunner
