@@ -5,49 +5,152 @@ require './watcher_dot_net.rb'
 #Copyright (c) 2011 Amir Rajan, Matt Florence
 #Copyright (c) 2011 The NSpec Development Team
 
-#edit the code below to pick your builder and runner, 
-#for :builder you can use either :MSBuilder, or :RakeBuilder
-#for :test_runner you can use :NSpecRunner, :NUnitRunner, or :MSTestRunner
+=begin
+ _______ _________ _______  _______ _________              _______  _______  _______ 
+(  ____ \\__   __/(  ___  )(  ____ )\__   __/    |\     /|(  ____ \(  ____ )(  ____ \
+| (    \/   ) (   | (   ) || (    )|   ) (       | )   ( || (    \/| (    )|| (    \/
+| (_____    | |   | (___) || (____)|   | |       | (___) || (__    | (____)|| (__    
+(_____  )   | |   |  ___  ||     __)   | |       |  ___  ||  __)   |     __)|  __)   
+      ) |   | |   | (   ) || (\ (      | |       | (   ) || (      | (\ (   | (      
+/\____) |   | |   | )   ( || ) \ \__   | |       | )   ( || (____/\| ) \ \__| (____/\
+\_______)   )_(   |/     \||/   \__/   )_(       |/     \|(_______/|/   \__/(_______/
+
+edit the code below to pick your builder and runner, 
+for :builder you can use either :MSBuilder, or :RakeBuilder
+for :test_runner you can use :NSpecRunner, :NUnitRunner, or :MSTestRunner
+=end
 @dw = WatcherDotNet.new ".", { :builder => :MSBuilder, :test_runner => :NSpecRunner }
 
-#if you choose :NSpecRunner as your :test_runner,
-#this is the execution path for the NSpecRunner, the recommendation is that you install nspec via nuget: Install-Package nspec
-#if you do install from nuget, specwatchr will automatically find the file.
-#if you want to explicitly set the execution path for nspecrunner.exe, uncomment the line below
-#NSpecRunner.nspec_path = '.\packages\nspec.0.9.24\tools\nspecrunner.exe'
+=begin
+ _______  _______  _______           _       
+(  ____ \(  ____ )(  ___  )|\     /|( \      
+| (    \/| (    )|| (   ) || )   ( || (      
+| |      | (____)|| |   | || | _ | || |      
+| | ____ |     __)| |   | || |( )| || |      
+| | \_  )| (\ (   | |   | || || || || |      
+| (___) || ) \ \__| (___) || () () || (____/\
+(_______)|/   \__/(_______)(_______)(_______/
 
-#if you choose :MSTestRunner as your :test_runner
-#this is the execution path for MSTest.exe
-MSTestRunner.ms_test_path = 
-  'C:\program files (x86)\microsoft visual studio 10.0\common7\ide\mstest.exe'
-
-#if you choose :NUnitRunner as your :test_runner
-#this is the execution path for NUnit.exe
-NUnitRunner.nunit_path = 
-  'C:\program files (x86)\nunit 2.5.9\bin\net-2.0\nunit-console-x86.exe'
-
-#if you choose :MSBuilder as your :builder
-#this is the execution path for MSBuild.exe
-MSBuilder.ms_build_path =
-  'C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe'
-
-#if you choose :RakeBuilder as your :builder
-#this is the rake command that will get executed
-RakeBuilder.rake_command = 'rake'
-
-#all notifications are faciltated throw Growl for Windows
-#set to empty string if you dont have growl installed
+all notifications are faciltated throw Growl for Windows
+set the following line to empty string if you dont have growl installed
+=end
 GrowlNotifier.growl_path = 
   'C:\program files (x86)\Growl for Windows\growlnotify.exe'
 
-#specwathcr tries to automatically find your test dlls (it'll look for projects that end in the word Test, Tests, Spec or Specs)
-#if for some reason you deviate from this convention, you can OVERRIDE the dlls selected using the following line of code
+=begin
+ _        _______  _______  _______  _______ 
+( (    /|(  ____ \(  ____ )(  ____ \(  ____ \
+|  \  ( || (    \/| (    )|| (    \/| (    \/
+|   \ | || (_____ | (____)|| (__    | |      
+| (\ \) |(_____  )|  _____)|  __)   | |      
+| | \   |      ) || (      | (      | |      
+| )  \  |/\____) || )      | (____/\| (____/\
+|/    )_)\_______)|/       (_______/(_______/
+
+if you choose :NSpecRunner as your :test_runner,
+this is the execution path for the NSpecRunner, the recommendation is that you install nspec via nuget: Install-Package nspec
+if you do install from nuget, specwatchr will automatically find the file.
+if you want to explicitly set the execution path for nspecrunner.exe, uncomment the line below
+=end
+#NSpecRunner.nspec_path = '.\packages\nspec.0.9.24\tools\nspecrunner.exe'
+
+=begin
+ _______  _______ _________ _______  _______ _________
+(       )(  ____ \\__   __/(  ____ \(  ____ \\__   __/
+| () () || (    \/   ) (   | (    \/| (    \/   ) (   
+| || || || (_____    | |   | (__    | (_____    | |   
+| |(_)| |(_____  )   | |   |  __)   (_____  )   | |   
+| |   | |      ) |   | |   | (            ) |   | |   
+| )   ( |/\____) |   | |   | (____/\/\____) |   | |   
+|/     \|\_______)   )_(   (_______/\_______)   )_(   
+
+if you choose :MSTestRunner as your :test_runner
+this is the execution path for MSTest.exe
+=end
+MSTestRunner.ms_test_path = 
+  'C:\program files (x86)\microsoft visual studio 10.0\common7\ide\mstest.exe'
+
+=begin
+ _                 _       __________________
+( (    /||\     /|( (    /|\__   __/\__   __/
+|  \  ( || )   ( ||  \  ( |   ) (      ) (   
+|   \ | || |   | ||   \ | |   | |      | |   
+| (\ \) || |   | || (\ \) |   | |      | |   
+| | \   || |   | || | \   |   | |      | |   
+| )  \  || (___) || )  \  |___) (___   | |   
+|/    )_)(_______)|/    )_)\_______/   )_(   
+
+if you choose :NUnitRunner as your :test_runner
+this is the execution path for NUnit.exe
+=end
+NUnitRunner.nunit_path = 
+  'C:\program files (x86)\nunit 2.5.9\bin\net-2.0\nunit-console-x86.exe'
+
+=begin
+ _______  _______  ______           _________ _        ______  
+(       )(  ____ \(  ___ \ |\     /|\__   __/( \      (  __  \ 
+| () () || (    \/| (   ) )| )   ( |   ) (   | (      | (  \  )
+| || || || (_____ | (__/ / | |   | |   | |   | |      | |   ) |
+| |(_)| |(_____  )|  __ (  | |   | |   | |   | |      | |   | |
+| |   | |      ) || (  \ \ | |   | |   | |   | |      | |   ) |
+| )   ( |/\____) || )___) )| (___) |___) (___| (____/\| (__/  )
+|/     \|\_______)|/ \___/ (_______)\_______/(_______/(______/ 
+
+if you choose :MSBuilder as your :builder
+this is the execution path for MSBuild.exe
+=end
+MSBuilder.ms_build_path =
+  'C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe'
+
+=begin
+ _______  _______  _        _______ 
+(  ____ )(  ___  )| \    /\(  ____ \
+| (    )|| (   ) ||  \  / /| (    \/
+| (____)|| (___) ||  (_/ / | (__    
+|     __)|  ___  ||   _ (  |  __)   
+| (\ (   | (   ) ||  ( \ \ | (      
+| ) \ \__| )   ( ||  /  \ \| (____/\
+|/   \__/|/     \||_/    \/(_______/
+
+if you choose :RakeBuilder as your :builder
+this is the rake command that will get executed
+=end
+RakeBuilder.rake_command = 'rake'
+
+=begin
+ _______           _______  _______  _______ _________ ______   _______ 
+(  ___  )|\     /|(  ____ \(  ____ )(  ____ )\__   __/(  __  \ (  ____ \
+| (   ) || )   ( || (    \/| (    )|| (    )|   ) (   | (  \  )| (    \/
+| |   | || |   | || (__    | (____)|| (____)|   | |   | |   ) || (__    
+| |   | |( (   ) )|  __)   |     __)|     __)   | |   | |   | ||  __)   
+| |   | | \ \_/ / | (      | (\ (   | (\ (      | |   | |   ) || (      
+| (___) |  \   /  | (____/\| ) \ \__| ) \ \_____) (___| (__/  )| (____/\
+(_______)   \_/   (_______/|/   \__/|/   \__/\_______/(______/ (_______/
+
+specwathcr tries to automatically find your test dlls (it'll look for projects that end in the word Test, Tests, Spec or Specs)
+if for some reason you deviate from this convention, you can OVERRIDE the dlls selected using the following line of code
+=end
 #@dw.test_runner.test_dlls = ['.\SampleSpecs\bin\Debug\SampleSpecs.dll']
 
+=begin
+ _______  _______  _______  _        _______ _________       _______           _______ 
+(  ___  )(  ____ \(  ____ )( (    /|(  ____ \\__   __/      (       )|\     /|(  ____ \
+| (   ) || (    \/| (    )||  \  ( || (    \/   ) (         | () () || )   ( || (    \/
+| (___) || (_____ | (____)||   \ | || (__       | |         | || || || |   | || |      
+|  ___  |(_____  )|  _____)| (\ \) ||  __)      | |         | |(_)| |( (   ) )| |      
+| (   ) |      ) || (      | | \   || (         | |         | |   | | \ \_/ / | |      
+| )   ( |/\____) || )    _ | )  \  || (____/\   | |         | )   ( |  \   /  | (____/\
+|/     \|\_______)|/    (_)|/    )_)(_______/   )_(         |/     \|   \_/   (_______/
 
+if you have the nuget package rake-dot-net installed you can use the following lines to build and deploy mvc applications everytime you save a web specific file
+make sure to set your builder to :RakeBuilder
+=end
+#watch ('(.*.cshtml)|(.*.js)|(.*.css)$') do |md| 
+#  @dw.sh.execute "rake"
+#  @dw.notifier.execute "website deployed", "deployed", "green"
+#end
 
-
-#everything after this is specwatchr specific, you dont have to worry about this stuff
+#everything after this is specwatchr specific
 def handle filename
 	@dw.consider filename
 end
@@ -86,7 +189,11 @@ end
 
 tutorial
 
-watch ('.*.\.cs$') { |md| handle md[0] }
+#this is how the watchr gem determines files to run through spec watchr
+watch ('.*.\.cs$') do |md| 
+  handle md[0] 
+end
+
 watch ('(.*.csproj$)|(.*.sln$)') do |md| 
   reload md[0]
 end

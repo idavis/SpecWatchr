@@ -141,6 +141,8 @@ class TestRunner
     return nil if !file.match(/\./)
 
     just_file_name = File.basename(file, ".cs")
+
+    just_file_name = just_file_name.split(".").first
     
     if(file.match(/describe_.*\//))
       return file.match(/describe_.*\//).to_s.gsub "/", ""
