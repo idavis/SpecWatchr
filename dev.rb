@@ -4,7 +4,7 @@ def run
 
   growl_path = 'C:\program files (x86)\Growl for Windows\growlnotify.exe'
 
-  text = `rspec spec`
+  text = `rspec spec --fail-fast`
 
   text.gsub!('"', "'")
 

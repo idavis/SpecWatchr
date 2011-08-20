@@ -58,6 +58,7 @@ describe NUnitRunner do
               1) Test Failure : when_retrieving.should_retrieve
             OUTPUT
 
+
             given_output "./test1.dll", test_output
 
             @test_runner.execute "describe_SomeTest"
@@ -169,9 +170,8 @@ describe NUnitRunner do
             it "should mark test run as failed if test threw exception (#{ kvp[:failure_type] })" do
               expected_output = <<-output.gsub(/^ {16}/, '')
                 Failed Tests:
-                when failing test
-                    it should fail first test
-                        Exception occured on following line
+                when_failing_test.it_should_fail_first_test
+                Exception occured on following line
 
               output
 
@@ -196,12 +196,11 @@ describe NUnitRunner do
             end
           end
 
-          it "should format test output with nice tabs" do
+          it "should format test output with minor cleanup" do
             expected_output = <<-output.gsub(/^ {14}/, '')
               Failed Tests:
-              when failing test
-                  it should fail first test
-                      Exception occured on following line
+              when_failing_test.it_should_fail_first_test
+              Exception occured on following line
 
             output
 
@@ -228,9 +227,8 @@ describe NUnitRunner do
           it "should set first_failed_test" do
             expected_output = <<-output.gsub(/^ {14}/, '')
               Failed Tests:
-              when failing test
-                  it should fail first test
-                      Exception occured on following line
+              when_failing_test.it_should_fail_first_test
+              Exception occured on following line
 
             output
 
@@ -253,9 +251,8 @@ describe NUnitRunner do
             @test_runner.execute "describe_SomeTest"
             @test_runner.first_failed_test.should == <<-expected.gsub(/^ {14}/, '')
               Failed Tests:
-              when failing test
-                  it should fail first test
-                      Exception occured on following line
+              when_failing_test.it_should_fail_first_test
+              Exception occured on following line
 
             expected
           end
@@ -264,15 +261,14 @@ describe NUnitRunner do
             it "should include multi line error message" do
               expected_output = <<-output.gsub(/^ {16}/, '')
                 Failed Tests:
-                when failing test
-                    it should fail first test
-                        Exception occured on following line
-                        line 2
+                when_failing_test.it_should_fail_first_test
+                Exception occured on following line
+                line 2
 
-                    it should fail first test2
-                        Exception occured on following line
-                        another lines of error
-                        yet some more
+                when_failing_test.it_should_fail_first_test2
+                Exception occured on following line
+                another lines of error
+                yet some more
 
               output
 
@@ -308,13 +304,12 @@ describe NUnitRunner do
 
       context "has passed tests" do
         context "single behavioral test under spec" do
-          it "should format test output with nice tabs" do
+          it "should format test output with clean output" do
             expected_output = <<-output.gsub(/^ {14}/, '')
               All Passed:
-              when passing test
-                  it should pass first test
+              autotestnet.when_passing_test.it_should_pass_first_test
 
-                  it should pass second test
+              autotestnet.when_passing_test.it_should_pass_second_test
 
               2 tests ran and passed
             output
@@ -335,16 +330,14 @@ describe NUnitRunner do
         end
 
         context "multiple behavioral tests under spec" do
-          it "should format test output with nice tabs" do
+          it "should format test output with clean output" do
             expected_output = <<-output.gsub(/^ {14}/, '')
               All Passed:
-              when passing other test
-                  it should pass other test
+              when_passing_other_test.it_should_pass_other_test
 
-              when passing test
-                  it should pass second test
+              when_passing_test.it_should_pass_second_test
 
-                  it should pass first test
+              when_passing_test.it_should_pass_first_test
 
               3 tests ran and passed
             output
@@ -392,14 +385,12 @@ describe NUnitRunner do
         it "should aggregate output of both failing test executions" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
-            when failing other test
-                it should fail other test
+            when_failing_other_test.it_should_fail_other_test
 
             Failed Tests:
-            when failing test
-                it should fail first test
+            when_failing_test.it_should_fail_first_test
 
-                it should fail second test
+            when_failing_test.it_should_fail_second_test
 
           output
 
@@ -442,10 +433,9 @@ describe NUnitRunner do
         it "should only show failed test output even if another dll has all tests passed" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
-            when failing test
-                it should fail first test
+            when_failing_test.it_should_fail_first_test
 
-                it should fail second test
+            when_failing_test.it_should_fail_second_test
 
           output
 
@@ -479,14 +469,12 @@ describe NUnitRunner do
         it "should aggregate output of both passing test executions" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             All Passed:
-            when passing other test
-                it should pass other test
+            autotestnet.when_passing_other_test.it_should_pass_other_test
 
             All Passed:
-            when passing test
-                it should pass first test
+            autotestnet.when_passing_test.it_should_pass_first_test
 
-                it should pass second test
+            autotestnet.when_passing_test.it_should_pass_second_test
 
             3 tests ran and passed
           output
@@ -527,9 +515,8 @@ describe NUnitRunner do
         it "should not display inconclusive if tests were found in at least one test suite" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
-            when failing other test
-                it should fail other test
-                    Error on line 1
+            when_failing_other_test.it_should_fail_other_test
+            Error on line 1
 
           output
 

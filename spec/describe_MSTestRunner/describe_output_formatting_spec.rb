@@ -28,12 +28,11 @@ describe MSTestRunner do
 
     context "has failing tests" do
       context "single behavioral test under spec" do
-        it "should format test output with nice tabs" do
+        it "should format test output with a little clean up" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
-            when failing test
-                it should fail first test
-                Exception occured on following line
+            autotestnet.when_failing_test.it_should_fail_first_test
+            Exception occured on following line
 
           output
 
@@ -51,10 +50,8 @@ describe MSTestRunner do
         it "should set first_failed_test" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
-            when failing test
-                it should fail first test
-                Exception occured on following line
-
+            autotestnet.when_failing_test.it_should_fail_first_test
+            Exception occured on following line
           output
 
           console_output = <<-console.gsub(/^ {12}/, '')
@@ -73,19 +70,18 @@ describe MSTestRunner do
           it "should include multi line error message" do
             expected_output = <<-output.gsub(/^ {14}/, '')
               Failed Tests:
-              when failing test
-                  it should fail first test
-                    Exception occured on following line
-                    line 2
+              autotestnet.when_failing_test.it_should_fail_first_test
+              Exception occured on following line
+              line 2
 
-                  it should fail first test2
-                    Exception occured on following line
-                    another lines of error
-                    yet some more
+              autotestnet.when_failing_test.it_should_fail_first_test2
+              Exception occured on following line
+              another lines of error
+              yet some more
 
             output
 
-            console_output = <<-console.gsub(/^ {12}/, '')
+            console_output = <<-console.gsub(/^ {14}/, '')
               gibberish
               Failed    autotestnet.when_failing_test.it_should_fail_first_test
               [errormessage] Exception occured on following line
@@ -109,14 +105,13 @@ describe MSTestRunner do
 
     context "has passed tests" do
       context "single behavioral test under spec" do
-        it "should format test output with nice tabs" do
+        it "should format test output with a little cleanup" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             All Passed:
-            when passing test
-                it should pass first test
+            autotestnet.when_passing_test.it_should_pass_first_test
 
-                it should pass second test
-            
+            autotestnet.when_passing_test.it_should_pass_second_test
+
             2 tests ran and passed
           output
 
@@ -136,14 +131,12 @@ describe MSTestRunner do
         it "should format test output with nice tabs" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             All Passed:
-            when passing other test
-                it should pass other test
+            autotestnet.when_passing_test.it_should_pass_first_test
 
-            when passing test
-                it should pass second test
+            autotestnet.when_passing_test.it_should_pass_second_test
 
-                it should pass first test
-            
+            autotestnet.when_passing_other_test.it_should_pass_other_test
+
             3 tests ran and passed
           output
 
@@ -168,10 +161,9 @@ describe MSTestRunner do
       it "should only show failed test output even if another dll has all tests passed" do
         expected_output = <<-output.gsub(/^ {10}/, '')
           Failed Tests:
-          when failing test
-              it should fail first test
+          autotestnet.when_failing_test.it_should_fail_first_test
 
-              it should fail second test
+          autotestnet.when_failing_test.it_should_fail_second_test
 
         output
 
@@ -194,14 +186,12 @@ describe MSTestRunner do
       it "should aggregate output of both failing test executions" do
         expected_output = <<-output.gsub(/^ {10}/, '')
           Failed Tests:
-          when failing other test
-              it should fail other test
+          autotestnet.when_failing_other_test.it_should_fail_other_test
 
           Failed Tests:
-          when failing test
-              it should fail first test
+          autotestnet.when_failing_test.it_should_fail_first_test
 
-              it should fail second test
+          autotestnet.when_failing_test.it_should_fail_second_test
 
         output
 
@@ -222,16 +212,15 @@ describe MSTestRunner do
       end
 
       it "should set first_failed_test from first executed dll" do
-          expected_output = <<-output.gsub(/^ {10}/, '')
+        expected_output = <<-output.gsub(/^ {10}/, '')
           Failed Tests:
-          when failing other test
-              it should fail other test
+          autotestnet.when_failing_other_test.it_should_fail_other_test
+          Exception occured on following line
 
           Failed Tests:
-          when failing test
-              it should fail first test
+          autotestnet.when_failing_test.it_should_fail_first_test
 
-              it should fail second test
+          autotestnet.when_failing_test.it_should_fail_second_test
 
         output
 
@@ -251,24 +240,20 @@ describe MSTestRunner do
         @test_runner.execute "SomeTestSpec"
         @test_runner.first_failed_test.should == <<-expected.gsub(/^ {10}/, '')
           Failed Tests:
-          when failing other test
-              it should fail other test
-              Exception occured on following line
-
+          autotestnet.when_failing_other_test.it_should_fail_other_test
+          Exception occured on following line
         expected
       end
 
       it "should aggregate output of both passing test executions" do
         expected_output = <<-output.gsub(/^ {10}/, '')
           All Passed:
-          when passing other test
-              it should pass other test
+          autotestnet.when_passing_other_test.it_should_pass_other_test
 
           All Passed:
-          when passing test
-              it should pass first test
+          autotestnet.when_passing_test.it_should_pass_first_test
 
-              it should pass second test
+          autotestnet.when_passing_test.it_should_pass_second_test
           
           3 tests ran and passed
         output
