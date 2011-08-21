@@ -47,6 +47,49 @@ describe MSTestRunner do
           @test_runner.test_results.should == expected_output
         end
 
+        it "should find name of test regardless of how many spaces exist between Failed entry and name" do
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            Failed Tests:
+            autotestnet.when_failing_test.it_should_fail_first_test
+            Exception occured on following line
+
+          output
+
+          console_output = <<-console.gsub(/^ {12}/, '')
+            Failed                                autotestnet.when_failing_test.it_should_fail_first_test
+            [errormessage] Exception occured on following line
+          console
+
+          given_output "./test1.dll", console_output
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
+
+        it "disregards the Failed word in the summary section" do
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            Failed Tests:
+            autotestnet.when_failing_test.it_should_fail_first_test
+            Exception occured on following line
+
+
+          output
+
+          console_output = <<-console.gsub(/^ {12}/, '')
+            Failed    autotestnet.when_failing_test.it_should_fail_first_test
+            [errormessage] Exception occured on following line
+
+            Summary
+            =============
+                Failed   2
+          console
+
+          given_output "./test1.dll", console_output
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
+
         it "should set first_failed_test" do
           expected_output = <<-output.gsub(/^ {12}/, '')
             Failed Tests:
@@ -118,6 +161,48 @@ describe MSTestRunner do
           console_output = <<-console.gsub(/^ {12}/, '')
             Passed    autotestnet.when_passing_test.it_should_pass_first_test
             Passed    autotestnet.when_passing_test.it_should_pass_second_test
+          console
+
+          given_output "./test1.dll", console_output
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
+
+        it "should find named of passing test name regardless of how many lines are between Passed marker and test name" do
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            All Passed:
+            autotestnet.when_passing_test.it_should_pass_first_test
+
+            autotestnet.when_passing_test.it_should_pass_second_test
+
+            2 tests ran and passed
+          output
+
+          console_output = <<-console.gsub(/^ {12}/, '')
+            Passed                    autotestnet.when_passing_test.it_should_pass_first_test
+            Passed                          autotestnet.when_passing_test.it_should_pass_second_test
+          console
+
+          given_output "./test1.dll", console_output
+
+          @test_runner.execute "SomeTestSpec"
+          @test_runner.test_results.should == expected_output
+        end
+
+        it "disregards the Passed word in the summary section" do
+          expected_output = <<-output.gsub(/^ {12}/, '')
+            All Passed:
+            autotestnet.when_passing_test.it_should_pass_first_test
+
+            1 tests ran and passed
+          output
+
+          console_output = <<-console.gsub(/^ {12}/, '')
+            Passed                    autotestnet.when_passing_test.it_should_pass_first_test
+            Summary
+            ========
+                Passed     1
           console
 
           given_output "./test1.dll", console_output

@@ -596,17 +596,19 @@ OUTPUT
 
     test_output.split("\n").each do |line|
       stripped_line = line.strip
-      if(stripped_line.match(/^Failed/))
+      if(line.match(/^Failed/))
         in_error = false
-        last_test_item = { :name => stripped_line.gsub("Failed    ", ""), :dll => test_dll }
+        last_test_item = { :name => stripped_line.gsub("Failed   ", "").gsub(" ", ""), :dll => test_dll }
         @failed_tests << last_test_item
       elsif(stripped_line.match(/errormessage/))
         in_error = true 
         last_test_item[:errormessage] = stripped_line.gsub("[errormessage] ", "")
-      elsif(stripped_line.match(/^Passed/))
+      elsif(line.match(/^Passed/))
         in_error = false
-        last_test_item = { :name => stripped_line.gsub("Passed    ", ""), :dll => test_dll }
+        last_test_item = { :name => stripped_line.gsub("Passed  ", "").gsub(" ", ""), :dll => test_dll }
         @passed_tests << last_test_item
+      elsif(stripped_line.match(/^Summary/))
+         in_error = false
       elsif(in_error)
          last_test_item[:errormessage] += "\n" + stripped_line
       end
